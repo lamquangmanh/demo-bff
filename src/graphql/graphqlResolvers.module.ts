@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
+import { SampleResolver } from './resolvers/sample/sample.resolver';
 @Module({
   imports: [],
-  providers: [],
+  providers: [SampleResolver],
 })
 export class GraphQLResolversModule {}
