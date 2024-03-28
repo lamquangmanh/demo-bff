@@ -23,9 +23,7 @@ const validateEnv = (config: Record<string, unknown>) => {
   });
 
   if (errors?.length > 0) {
-    console.info(
-      '\n😻 ---------------Validating .env.* file--------------- 😻',
-    );
+    console.info('\n😻 ---------------Validating .env.* file--------------- 😻');
     console.error(errors.map((e) => e.constraints));
     process.exit(1);
   }
