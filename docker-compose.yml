@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  fcm-backend:
+    image: fcm-bff:latest
+    build:
+      target: runner
+    ports:
+      - '3001:3000'
+    # env_file:
+    #   - ${ENV_PATH}/bff/.env
+networks:
+  intranet:
+
+
