@@ -1,14 +1,16 @@
 import { Resolver, Query } from '@nestjs/graphql';
 import { SampleSchema } from './sample.schema';
+import { AddSampleUseCase, GetSampleUseCase } from 'src/useCases/sample';
 
 @Resolver(() => SampleSchema)
 export class SampleResolver {
-  constructor() {}
+  constructor(
+    private addSampleUseCase: AddSampleUseCase,
+    private getSampleUseCase: GetSampleUseCase,
+  ) {}
 
   @Query(() => SampleSchema, { name: 'Sample' })
   async samples() {
-    return {
-      name: 'hello',
-    };
+    return this.getSampleUseCase.execute();
   }
 }

@@ -7,10 +7,7 @@ import * as path from 'path';
 
 interface GraphQLConfigsModuleRegisterInterface {
   context: any;
-  formatError: (
-    formattedError: GraphQLFormattedError,
-    error: unknown,
-  ) => GraphQLFormattedError;
+  formatError: (formattedError: GraphQLFormattedError, error: unknown) => GraphQLFormattedError;
 }
 
 @Module({})
