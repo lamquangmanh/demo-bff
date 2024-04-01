@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
-import { formatError } from 'graphql';
 import { GraphQLResolversModule } from './presentation/graphql/graphql-resolvers.module';
 import { ConfigModule } from './infrastructure/configs/env.config';
 import { APP_FILTER } from '@nestjs/core';
-import { GlobalException } from './presentation/graphql/common/exceptions/global.exception';
+import {
+  GlobalException,
+  formatError,
+} from './presentation/graphql/common/exceptions/global.exception';
 
 @Module({
   imports: [
