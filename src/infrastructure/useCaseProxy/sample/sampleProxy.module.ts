@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
 import { SAMPLE_USECASE } from 'src/domain/common/useCaseName/sample';
 import { ClientGRPCModule } from 'src/infrastructure/grpc/clientGRPC.module';
-import { AddSampleUseCase, GetSampleUseCase } from 'src/use-cases/sample';
+import { AddSampleUseCase, GetSampleUseCase } from '@application/use-cases/sample';
 
 @Module({
   imports: [ClientGRPCModule],
