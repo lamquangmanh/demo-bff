@@ -5,7 +5,9 @@ import { AddSampleUseCase, GetSampleUseCase } from '@application/use-cases/sampl
 @Resolver(() => SampleSchema)
 export class SampleResolver {
   constructor(
+    @Inject(SAMPLE_USECASE.ADD_SAMPLE)
     private addSampleUseCase: AddSampleUseCase,
+    @Inject(SAMPLE_USECASE.GET_SAMPLE)
     private getSampleUseCase: GetSampleUseCase,
   ) {}
 

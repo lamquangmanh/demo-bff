@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package users;
+
+message ParamsDTO {
+  string name = 1;
+}
+
+message EmptyDTO {}
+
+message UserResponse {
+  string name = 1;
+}
+
+message StreamDataResponse {
+  int32 data = 1;
+}
+
+message ListUsersResponse {
+  repeated UserResponse data = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  int32 total = 4;
+}
+
+
+
+service Users {
+  rpc GetUser (ParamsDTO) returns (UserResponse);
+  rpc GetListUsers (EmptyDTO) returns (ListUsersResponse);
+}

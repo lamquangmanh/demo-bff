@@ -18,6 +18,7 @@ import { GlobalException } from './presentation/graphql/common/exceptions/global
       },
     }),
     GraphQLResolversModule,
+    UseCaseProxyModule,
   ],
   providers: [
     {
