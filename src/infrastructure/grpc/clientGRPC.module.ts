@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+// import { join } from 'path';
 import { MICROSERVICE_NAME, PACKAGE_NAME } from 'src/domain/common/constants';
 import { GRPCService } from './gRPC.service';
 import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
@@ -13,7 +13,7 @@ import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
         transport: Transport.GRPC,
         options: {
           package: PACKAGE_NAME.USERS,
-          protoPath: join(__dirname, './protos/users.proto'),
+          protoPath: './protos/users.proto',
           url: 'localhost:50051',
         },
       },
