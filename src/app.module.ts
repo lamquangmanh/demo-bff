@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
-import { formatError } from 'graphql';
 import { GraphQLResolversModule } from './graphql/graphql-resolvers.module';
 import { ConfigModule } from './infrastructure/configs/env.config';
+import { formatError } from './graphql/common/exceptions/global.exception';
+import { UseCaseProxyModule } from './infrastructure/useCaseProxy/useCaseProxy.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ConfigModule } from './infrastructure/configs/env.config';
       },
     }),
     GraphQLResolversModule,
+    UseCaseProxyModule,
   ],
   providers: [],
 })

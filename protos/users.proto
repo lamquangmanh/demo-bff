@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package log;
+package users;
 
 message ParamsDTO {
   string name = 1;
