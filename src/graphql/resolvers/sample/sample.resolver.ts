@@ -1,6 +1,6 @@
 import { Resolver, Query } from '@nestjs/graphql';
 import { SampleSchema } from './sample.schema';
-import { AddSampleUseCase, GetSampleUseCase } from 'src/useCases/sample';
+import { AddSampleUseCase, GetSampleUseCase } from 'src/use-cases/sample';
 
 @Resolver(() => SampleSchema)
 export class SampleResolver {
