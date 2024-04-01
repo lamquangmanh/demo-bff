@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SampleResolver } from './resolvers/sample/sample.resolver';
-import { UseCaseManagerModule } from 'src/use-cases/use-case-manager.module';
+import { UseCaseManagerModule } from '@src/infrastructure/use-case-manager/use-case-manager.module';
 @Module({
   imports: [UseCaseManagerModule],
   providers: [SampleResolver],

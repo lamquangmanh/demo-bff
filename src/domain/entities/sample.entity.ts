@@ -1,3 +1,3 @@
-export interface ISample {
+export interface Sample {
   name: string;
 }

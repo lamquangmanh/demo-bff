@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ISample } from 'src/domain/entities';
+import { Sample } from 'src/domain/entities';
 
 @Injectable()
 export class AddSampleUseCase {
-  execute({ name }: { name: string }): ISample {
+  execute({ name }: { name: string }): Sample {
     return {
       name,
     };
