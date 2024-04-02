@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { MICROSERVICE_NAME } from 'src/domain/common/constants';
-import { UserService } from './users.service';
-import { IUserGrpcService } from 'src/domain/interfaces/grpcService/IUserGrpcService';
-import { IUserService } from 'src/domain/interfaces/service/IUserService';
+import { UserService } from './services/users.service';
+import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
+import { IUserService } from '@src/domain/interfaces/service/user-service';
 import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
 
 @Injectable()

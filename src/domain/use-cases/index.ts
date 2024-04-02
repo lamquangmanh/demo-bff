@@ -1,2 +1,2 @@
-export * from './add-sample.use-case';
-export * from './get-sample.use-case';
+export * from './add-sample.abstract';
+export * from './get-sample.abstract';

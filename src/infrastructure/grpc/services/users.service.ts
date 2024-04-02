@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom, toArray } from 'rxjs';
-import { IUserGrpcService } from 'src/domain/interfaces/grpcService/IUserGrpcService';
-import { IUserService } from 'src/domain/interfaces/service/IUserService';
+import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
+import { IUserService } from '@src/domain/interfaces/service/user-service';
 
 @Injectable()
 export class UserService implements IUserService {
