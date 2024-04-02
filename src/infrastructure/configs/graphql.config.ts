@@ -25,7 +25,7 @@ export class GraphQLConfigsModule {
             return {
               playground: !config.get<boolean>('isProd', false),
               autoSchemaFile: path.join(
-                `${config.get<boolean>('isDev', true) ? 'src' : 'dist'}/graphql`,
+                `${config.get<boolean>('isDev', true) ? 'src' : 'dist'}/presentation/graphql`,
                 'schema.gql',
               ),
               sortSchema: true,
