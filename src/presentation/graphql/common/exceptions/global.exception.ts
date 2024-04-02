@@ -24,18 +24,43 @@ export class GlobalException implements ExceptionFilter {
   }
 }
 
-export const formatError = (formattedError: GraphQLFormattedError): GraphQLFormattedError => {
+export const formatError = (formattedError: GraphQLFormattedError): any => {
   const extensions = formattedError?.extensions;
+  const [code, statusCode, subMessage] = [
+    extensions['code'],
+    extensions['statusCode'],
+    extensions['message'],
+  ];
+  const subMessageObj = subMessage
+    ? {
+        subMessage,
+      }
+    : {};
+
+  delete extensions['code'];
+  delete extensions['statusCode'];
+  delete extensions['message'];
+
   console.error('🚀 ~ GraphqlException ~ error:', formattedError);
 
-  return {
-    message: formattedError.message,
-    ...(process.env.ENV === 'DEV'
-      ? { locations: formattedError.locations, path: formattedError.path }
-      : {}),
-    extensions: {
-      ...extensions,
-      ...(process.env.ENV === 'DEV' ? { devMessage: extensions.devMessage } : {}),
+  if (['STG', 'PROD'].includes(process.env.ENV)) {
+    return Object.assign(
+      {
+        message: formattedError.message,
+        code,
+        statusCode,
+      },
+      subMessageObj,
+    );
+  }
+
+  return Object.assign(
+    {
+      ...formattedError,
+      code,
+      statusCode,
+      extensions,
     },
-  };
+    subMessageObj,
+  );
 };
