@@ -11,11 +11,6 @@ export class SampleResolver {
 
   @Query(() => SampleSchema, { name: 'Sample' })
   async samples() {
-    try {
-      return this.getSampleUseCase.execute();
-    } catch (err) {
-      console.log('err===', err);
-      throw err;
-    }
+    return this.getSampleUseCase.execute();
   }
 }
