@@ -7,6 +7,7 @@ import {
   GlobalException,
   formatError,
 } from './presentation/graphql/common/exceptions/global.exception';
+import { LoggerModule } from './infrastructure/libs/logger';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import {
       },
     }),
     GraphQLResolversModule,
+    LoggerModule,
   ],
   providers: [
     {
