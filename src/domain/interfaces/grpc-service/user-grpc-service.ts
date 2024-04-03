@@ -4,11 +4,9 @@ import { User } from '../../models/user.model';
 import { AddUserDto, UpdateUserDto } from '@src/presentation/graphql/resolvers/user/user.dto';
 
 export interface IUserGrpcService extends GrpcServiceAbstract<User> {
-  getUserById(id: number): Observable<User>;
-  getUsers(filter: any): Observable<User[]>;
-  deleteUser(id: number): Observable<User>;
-  updateUser(data: UpdateUserDto): Observable<User>;
-  addUser(data: AddUserDto): Observable<User>;
-  // getUser({ name }: { name: string }): Observable<User>;
-  // getUserStream(): Observable<{ data: number }>;
+  get(id: number): Observable<User>;
+  list(filter: any): Observable<User[]>;
+  delete(id: number): Observable<User>;
+  update(data: UpdateUserDto): Observable<User>;
+  create(data: AddUserDto): Observable<User>;
 }

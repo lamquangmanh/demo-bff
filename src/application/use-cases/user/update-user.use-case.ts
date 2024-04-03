@@ -9,7 +9,7 @@ export class UpdateUserUseCase implements UpdateUserUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
   async execute(data: UpdateUserDto): Promise<User> {
-    return this.grpcService.userService.updateUser(data);
+    return this.grpcService.userService.update(data);
 
     return {
       ...data,

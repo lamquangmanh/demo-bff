@@ -12,6 +12,8 @@ export class GRPCService implements GrpcContextAbstract {
   constructor(@Inject(MICROSERVICE_NAME.USERS_SERVICE) private userClientGrpc: ClientGrpc) {}
 
   onModuleInit() {
-    this.userService = new UserService(this.userClientGrpc.getService<IUserGrpcService>('Users'));
+    this.userService = new UserService(
+      this.userClientGrpc.getService<IUserGrpcService>('UsersService'),
+    );
   }
 }

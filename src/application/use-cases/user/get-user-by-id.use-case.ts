@@ -8,7 +8,7 @@ export class GetUserByIdUseCase implements GetUserByIdUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
   async execute(id: number): Promise<User> {
-    return this.grpcService.userService.getUserById(id);
+    return this.grpcService.userService.get(id);
     return {
       id: id,
       name: 'name',

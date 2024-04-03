@@ -17,66 +17,45 @@ export class UserService implements IUserService {
     this.grpcService = service;
   }
 
-  async getUserById(id: number): Promise<User> {
+  async get(id: number): Promise<User> {
     try {
-      const result = await lastValueFrom(this.grpcService.getUserById(id));
+      const result = await lastValueFrom(this.grpcService.get(id));
       return result;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async getUsers(filter: UsersFilterDto): Promise<User[]> {
+  async list(filter: UsersFilterDto): Promise<User[]> {
     try {
-      const result = await lastValueFrom(this.grpcService.getUsers(filter));
+      const result = await lastValueFrom(this.grpcService.list(filter));
       return result;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async deleteUser(id: number): Promise<User> {
+  async delete(id: number): Promise<User> {
     try {
-      return lastValueFrom(this.grpcService.deleteUser(id));
+      return lastValueFrom(this.grpcService.delete(id));
     } catch (err) {
       console.log(err);
     }
   }
 
-  async updateUser(data: UpdateUserDto): Promise<User> {
+  async update(data: UpdateUserDto): Promise<User> {
     try {
-      return lastValueFrom(this.grpcService.updateUser(data));
+      return lastValueFrom(this.grpcService.update(data));
     } catch (err) {
       console.log(err);
     }
   }
 
-  async addUser(data: AddUserDto): Promise<User> {
+  async create(data: AddUserDto): Promise<User> {
     try {
-      return lastValueFrom(this.grpcService.addUser(data));
+      return lastValueFrom(this.grpcService.create(data));
     } catch (err) {
       console.log(err);
     }
   }
-
-  //   async getUser({ name }: { name: string }): Promise<{ name: string }> {
-  //     console.log('START');
-  //     try {
-  //       const result = await lastValueFrom(this.grpcService.getUser({ name }));
-
-  //       return result;
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-
-  //   async getUserStream(): Promise<{ data: number }[]> {
-  //     try {
-  //       const res = await lastValueFrom(this.grpcService.getUserStream().pipe(toArray()));
-
-  //       return res;
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
 }

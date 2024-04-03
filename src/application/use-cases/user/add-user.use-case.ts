@@ -9,7 +9,7 @@ export class AddUserUseCase implements AddUserUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
   async execute(data: AddUserDto): Promise<User> {
-    return this.grpcService.userService.addUser(data);
+    return this.grpcService.userService.create(data);
     return {
       id: 1,
       ...data,
