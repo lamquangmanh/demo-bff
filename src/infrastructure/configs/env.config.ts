@@ -1,8 +1,8 @@
 import { IsBoolean, IsNumber, IsOptional, validateSync } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { Environment } from '../enums/system.enum';
 import { Module } from '@nestjs/common';
 import { ConfigModule as ConfigModuleNestJs } from '@nestjs/config';
+import { Environment } from '@src/domain/enums/env-system.enum';
 
 class EnvironmentVariables {
   @IsNumber()

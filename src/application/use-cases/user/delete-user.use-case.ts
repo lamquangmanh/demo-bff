@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { GrpcContextAbstract } from '@src/domain/abstracts/grpcContext.abstract';
 import { User } from '@src/domain/entities';
 import { DeleteUserUseCaseAbstract } from '@src/domain/use-cases';
 
 @Injectable()
 export class DeleteUserUseCase implements DeleteUserUseCaseAbstract {
-  execute(id: string): User {
+  constructor(private grpcService: GrpcContextAbstract) {}
+  async execute(id: number): Promise<User> {
+    return this.grpcService.userService.deleteUser(id);
     return {
-      user_id: id,
-      user_name: 'name',
-      permissions: 'admin',
+      id: id,
+      name: 'name',
+      username: 'admin',
     };
   }
 }

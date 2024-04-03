@@ -3,11 +3,11 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType('User')
 export class UserSchema {
   @Field()
-  user_id: string;
+  id: number;
 
   @Field()
-  user_name: string;
+  name: string;
 
   @Field()
-  permissions: string;
+  username: string;
 }

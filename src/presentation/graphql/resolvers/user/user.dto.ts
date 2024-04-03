@@ -5,26 +5,26 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 export class AddUserDto {
   @Field()
   @IsString()
-  user_name: string;
+  name: string;
 
   @Field()
   @IsString()
-  permissions: string;
+  username: string;
 }
 
 @InputType()
 export class UpdateUserDto {
   @Field()
-  @IsString()
-  user_id: string;
+  @IsNumber()
+  id: number;
 
   @Field()
   @IsString()
-  user_name: string;
+  name: string;
 
   @Field()
   @IsString()
-  permissions: string;
+  username: string;
 }
 
 @InputType()
