@@ -38,4 +38,14 @@ export class UsersFilterDto {
   @IsOptional()
   @IsNumber()
   limit?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  name?: number;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  sort?: number;
 }

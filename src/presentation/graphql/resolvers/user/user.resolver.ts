@@ -6,7 +6,12 @@ import {
   GetUsersUseCaseAbstract,
   UpdateUserUseCaseAbstract,
 } from '@src/domain/use-cases';
-import { UserSchema } from './user.schema';
+import {
+  DeleteUserResponse,
+  GetUsersResponseSchema,
+  UpdateUserResponse,
+  UserSchema,
+} from './user.schema';
 import { AddUserDto, UpdateUserDto, UsersFilterDto } from './user.dto';
 
 @Resolver(() => UserSchema)
@@ -20,27 +25,31 @@ export class UserResolver {
   ) {}
 
   @Query(() => UserSchema, { name: 'getUserById' })
-  async getUserById(@Args('id') id: string) {
+  async getUserById(@Args('id') id: string): Promise<UserSchema> {
     return this.getUserByIdUseCase.execute(id);
   }
 
-  @Query(() => [UserSchema], { name: 'getUsers' })
-  async getUsers(@Args('usersFilterDto') usersFilterDto: UsersFilterDto) {
+  @Query(() => GetUsersResponseSchema, { name: 'getUsers' })
+  async getUsers(
+    @Args('usersFilterDto') usersFilterDto: UsersFilterDto,
+  ): Promise<GetUsersResponseSchema> {
     return this.getUsersUseCase.execute(usersFilterDto);
   }
 
-  @Mutation(() => UserSchema, { name: 'deleteUser' })
-  async deleteUser(@Args('id') id: string) {
+  @Mutation(() => DeleteUserResponse, { name: 'deleteUser' })
+  async deleteUser(@Args('id') id: string): Promise<DeleteUserResponse> {
     return this.deleteUserUseCase.execute(id);
   }
 
   @Mutation(() => UserSchema, { name: 'addUser' })
-  async addUser(@Args('addUserDto') addUserDto: AddUserDto) {
+  async addUser(@Args('addUserDto') addUserDto: AddUserDto): Promise<UserSchema> {
     return this.addUserUseCase.execute(addUserDto);
   }
 
-  @Mutation(() => UserSchema, { name: 'updateUser' })
-  async updateUser(@Args('updateUserDto') updateUserDto: UpdateUserDto) {
+  @Mutation(() => UpdateUserResponse, { name: 'updateUser' })
+  async updateUser(
+    @Args('updateUserDto') updateUserDto: UpdateUserDto,
+  ): Promise<UpdateUserResponse> {
     return this.updateUserUseCase.execute(updateUserDto);
   }
 }
