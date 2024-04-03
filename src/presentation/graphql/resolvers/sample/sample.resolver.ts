@@ -9,7 +9,7 @@ export class SampleResolver {
     private getSampleUseCase: GetSampleUseCaseAbstract,
   ) {}
 
-  @Query(() => SampleSchema, { name: 'Sample' })
+  @Query(() => SampleSchema, { name: 'sample' })
   async samples() {
     return this.getSampleUseCase.execute();
   }
