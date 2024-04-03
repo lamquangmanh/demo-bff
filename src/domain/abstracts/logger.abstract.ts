@@ -7,33 +7,33 @@ export abstract class LoggerAbstract {
    * Write a 'log' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
    */
-  abstract log(message: any, context?: string): void;
+  abstract log(message: any, userId?: string, context?: string): void;
   /**
    * Write an 'error' level log, if the configured level allows for it.
    * Prints to `stderr` with newline.
    */
-  abstract error(message: any, stackOrContext?: string): void;
-  abstract error(message: any, stack?: string, context?: string): void;
+  abstract error(message: any, userId?: string, stackOrContext?: string): void;
+  abstract error(message: any, userId?: string, stack?: string, context?: string): void;
   /**
    * Write a 'warn' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
    */
-  abstract warn(message: any, context?: string): void;
+  abstract warn(message: any, userId?: string, context?: string): void;
   /**
    * Write a 'debug' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
    */
-  abstract debug(message: any, context?: string): void;
+  abstract debug(message: any, userId?: string, context?: string): void;
   /**
    * Write a 'verbose' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
    */
-  abstract verbose(message: any, context?: string): void;
+  abstract verbose(message: any, userId?: string, context?: string): void;
   /**
    * Write a 'fatal' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
    */
-  abstract fatal(message: any, context?: string): void;
+  abstract fatal(message: any, userId?: string, context?: string): void;
   /**
    * Set log levels
    * @param levels log levels
