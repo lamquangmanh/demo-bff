@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
 import { GraphQLResolversModule } from './presentation/graphql/graphql-resolvers.module';
 import { ConfigModule } from './infrastructure/configs/env.config';
@@ -9,6 +9,7 @@ import {
 } from './presentation/graphql/common/exceptions/global.exception';
 import { LoggerModule } from './infrastructure/libs/logger';
 import { JsonScalar } from './presentation/graphql/common/scalar/json.scalar';
+import { LoggerMiddleware } from './presentation/graphql/common/middlewares/logger.middleware';
 
 @Module({
   imports: [
@@ -28,4 +29,8 @@ import { JsonScalar } from './presentation/graphql/common/scalar/json.scalar';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

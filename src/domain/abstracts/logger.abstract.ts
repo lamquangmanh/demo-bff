@@ -3,6 +3,7 @@ export abstract class LoggerAbstract {
   static lastTimestampAt?;
   abstract originalContext?;
 
+  abstract setRequestId(requestId: string);
   /**
    * Write a 'log' level log, if the configured level allows for it.
    * Prints to `stdout` with newline.
