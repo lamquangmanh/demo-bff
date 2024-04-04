@@ -9,11 +9,11 @@ module.exports = {
   deploy: {
     hun_stg_be: {
       key: '~/.ssh/core-bff/id_rsa',
-      user: 'admin',
+      user: 'root',
       ssh_options: 'IdentitiesOnly=true',
-      host: '3.115.190.197',
-      ref: 'origin/dev',
-      repo: 'git@abc.git',
+      host: '128.199.255.176',
+      ref: 'origin/main',
+      repo: 'git@github.com:lamquangmanh/core-bff.git',
       path: '/data/sources/cyberlogitec/core-bff',
       'post-deploy': `source ~/.nvm/nvm.sh && npm install && pm2 reload ecosystem.config.js`,
     },
