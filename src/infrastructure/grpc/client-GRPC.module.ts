@@ -4,7 +4,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MICROSERVICE_NAME, PACKAGE_NAME } from 'src/domain/common/constants';
 import { GRPCService } from './gRPC.service';
 import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
-
 @Module({
   imports: [
     ClientsModule.register([
@@ -14,19 +13,27 @@ import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
         options: {
           package: PACKAGE_NAME.USERS,
           protoPath: './protos/users.proto',
-          url: 'localhost:50051',
+          url: '0.0.0.0:50051',
         },
       },
-      // {
-      //   name: MICROSERVICE_NAME.AUTH_SERVICE,
-      //   transport: Transport.GRPC,
-      //   options: {
-      //     package: PACKAGE_NAME.AUTH,
-      //     protoPath: join(__dirname, './protos/auth.proto'),
-      //     url: 'localhost:50051',
-      //   },
-      // },
     ]),
+    // ClientsModule.registerAsync([
+    //   {
+    //     name: MICROSERVICE_NAME.USERS_SERVICE,
+    //     imports: [ConfigModule],
+    //     useFactory: async (configService: ConfigService) => {
+    //       console.log(process.env.SERVICE_HOST);
+    //       return {
+    //         transport: Transport.GRPC,
+    //         options: {
+    //           package: PACKAGE_NAME.USERS,
+    //           protoPath: './protos/users.proto',
+    //           url: process.env.SERVICE_HOST || '0.0.0.0:50051',
+    //         },
+    //       };
+    //     },
+    //   },
+    // ]),
   ],
   providers: [{ provide: GrpcContextAbstract, useClass: GRPCService }],
   exports: [GrpcContextAbstract],

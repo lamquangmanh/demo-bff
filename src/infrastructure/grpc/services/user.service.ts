@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 import { User } from '@src/domain/entities';
 import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
 import { AddUserRequest, GetUsersRequest, UpdateUserRequest } from '@src/domain/interfaces/request';
@@ -9,15 +8,16 @@ import {
   UpdateUserResponse,
 } from '@src/domain/interfaces/response';
 import { IUserService } from '@src/domain/interfaces/service/user-service';
+import { Logger } from '@src/infrastructure/libs/logger';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService implements IUserService {
   private userGrpcService: IUserGrpcService;
-  private logger: LoggerAbstract;
-  constructor(service: IUserGrpcService, logger: LoggerAbstract) {
+  private logger;
+  constructor(service: IUserGrpcService) {
     this.userGrpcService = service;
-    this.logger = logger;
+    this.logger = new Logger(UserService.name);
   }
 
   async get(id: number): Promise<User> {
