@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { GrpcContextAbstract } from '@src/domain/abstracts/grpcContext.abstract';
-import { User } from '@src/domain/entities';
+import { GetUsersRequest } from '@src/domain/interfaces/request';
+import { GetUsersResponse } from '@src/domain/interfaces/response/user';
 import { GetUsersUseCaseAbstract } from '@src/domain/use-cases';
-import { UsersFilterDto } from '@src/presentation/graphql/resolvers/user/user.dto';
 
 @Injectable()
 export class GetUsersUseCase implements GetUsersUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
-  async execute(filter: UsersFilterDto): Promise<User[]> {
+  async execute(filter: GetUsersRequest): Promise<GetUsersResponse> {
     return this.grpcService.userService.list(filter);
   }
 }

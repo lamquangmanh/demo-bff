@@ -1,61 +1,64 @@
 import { Injectable } from '@nestjs/common';
+import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
+import { User } from '@src/domain/entities';
 import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
-import { IUserService } from '@src/domain/interfaces/service/user-service';
-import { User } from '@src/domain/models/user.model';
+import { AddUserRequest, GetUsersRequest, UpdateUserRequest } from '@src/domain/interfaces/request';
 import {
-  AddUserDto,
-  UpdateUserDto,
-  UsersFilterDto,
-} from '@src/presentation/graphql/resolvers/user/user.dto';
+  DeleteUserResponse,
+  GetUsersResponse,
+  UpdateUserResponse,
+} from '@src/domain/interfaces/response';
+import { IUserService } from '@src/domain/interfaces/service/user-service';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService implements IUserService {
-  private grpcService: IUserGrpcService;
-
-  constructor(service: IUserGrpcService) {
-    this.grpcService = service;
+  private userGrpcService: IUserGrpcService;
+  private logger: LoggerAbstract;
+  constructor(service: IUserGrpcService, logger: LoggerAbstract) {
+    this.userGrpcService = service;
+    this.logger = logger;
   }
 
   async get(id: number): Promise<User> {
     try {
-      const result = await lastValueFrom(this.grpcService.get(id));
+      const result = await lastValueFrom(this.userGrpcService.get(id));
       return result;
     } catch (err) {
-      console.log(err);
+      this.logger.error(JSON.stringify(err));
     }
   }
 
-  async list(filter: UsersFilterDto): Promise<User[]> {
+  async list(filter: GetUsersRequest): Promise<GetUsersResponse> {
     try {
-      const result = await lastValueFrom(this.grpcService.list(filter));
+      const result = await lastValueFrom(this.userGrpcService.list(filter));
       return result;
     } catch (err) {
-      console.log(err);
+      this.logger.error(JSON.stringify(err));
     }
   }
 
-  async delete(id: number): Promise<User> {
+  async delete(id: number): Promise<DeleteUserResponse> {
     try {
-      return lastValueFrom(this.grpcService.delete(id));
+      return lastValueFrom(this.userGrpcService.delete(id));
     } catch (err) {
-      console.log(err);
+      this.logger.error(JSON.stringify(err));
     }
   }
 
-  async update(data: UpdateUserDto): Promise<User> {
+  async update(data: UpdateUserRequest): Promise<UpdateUserResponse> {
     try {
-      return lastValueFrom(this.grpcService.update(data));
+      return lastValueFrom(this.userGrpcService.update(data));
     } catch (err) {
-      console.log(err);
+      this.logger.error(JSON.stringify(err));
     }
   }
 
-  async create(data: AddUserDto): Promise<User> {
+  async create(data: AddUserRequest): Promise<User> {
     try {
-      return lastValueFrom(this.grpcService.create(data));
+      return lastValueFrom(this.userGrpcService.create(data));
     } catch (err) {
-      console.log(err);
+      this.logger.error(JSON.stringify(err));
     }
   }
 }

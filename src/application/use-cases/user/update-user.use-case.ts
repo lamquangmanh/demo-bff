@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { GrpcContextAbstract } from '@src/domain/abstracts/grpcContext.abstract';
-import { User } from '@src/domain/entities';
+import { UpdateUserRequest } from '@src/domain/interfaces/request';
+import { UpdateUserResponse } from '@src/domain/interfaces/response';
 import { UpdateUserUseCaseAbstract } from '@src/domain/use-cases';
-import { UpdateUserDto } from '@src/presentation/graphql/resolvers/user/user.dto';
 
 @Injectable()
 export class UpdateUserUseCase implements UpdateUserUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
-  async execute(data: UpdateUserDto): Promise<User> {
+  async execute(data: UpdateUserRequest): Promise<UpdateUserResponse> {
     return this.grpcService.userService.update(data);
-
-    return {
-      ...data,
-    };
   }
 }

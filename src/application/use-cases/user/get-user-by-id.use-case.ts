@@ -9,10 +9,5 @@ export class GetUserByIdUseCase implements GetUserByIdUseCaseAbstract {
 
   async execute(id: number): Promise<User> {
     return this.grpcService.userService.get(id);
-    return {
-      id: id,
-      name: 'name',
-      username: 'admin',
-    };
   }
 }

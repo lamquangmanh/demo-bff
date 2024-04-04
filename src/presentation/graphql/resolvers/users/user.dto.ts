@@ -42,10 +42,10 @@ export class UsersFilterDto {
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  name?: number;
+  name?: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsString()
-  sort?: number;
+  sort?: string;
 }

@@ -9,7 +9,7 @@ import {
   DeleteUserUseCaseAbstract,
   GetUsersUseCaseAbstract,
   GetUserByIdUseCaseAbstract,
-} from '../../domain/use-cases';
+} from '@src/domain/use-cases';
 import { AddUserUseCase, GetUserByIdUseCase } from '@src/application/use-cases/user';
 import { UpdateUserUseCase } from '@src/application/use-cases/user/update-user.use-case';
 import { DeleteUserUseCase } from '@src/application/use-cases/user/delete-user.use-case';

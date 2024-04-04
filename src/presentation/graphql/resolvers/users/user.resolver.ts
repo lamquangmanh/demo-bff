@@ -25,7 +25,7 @@ export class UserResolver {
   ) {}
 
   @Query(() => UserSchema, { name: 'getUserById' })
-  async getUserById(@Args('id') id: string): Promise<UserSchema> {
+  async getUserById(@Args('id') id: number): Promise<UserSchema> {
     return this.getUserByIdUseCase.execute(id);
   }
 
@@ -37,7 +37,7 @@ export class UserResolver {
   }
 
   @Mutation(() => DeleteUserResponse, { name: 'deleteUser' })
-  async deleteUser(@Args('id') id: string): Promise<DeleteUserResponse> {
+  async deleteUser(@Args('id') id: number): Promise<DeleteUserResponse> {
     return this.deleteUserUseCase.execute(id);
   }
 
@@ -50,6 +50,6 @@ export class UserResolver {
   async updateUser(
     @Args('updateUserDto') updateUserDto: UpdateUserDto,
   ): Promise<UpdateUserResponse> {
-    return this.updateUserUseCase.execute(updateUserDto);
+    return this.updateUserUseCase.execute({ ...updateUserDto });
   }
 }
