@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'core_bff',
-      script: 'npm start',
+      script: 'npm run start:prod',
     },
   ],
 
@@ -15,7 +15,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'git@github.com:lamquangmanh/core-bff.git',
       path: '/data/sources/cyberlogitec/core-bff',
-      'post-deploy': `source ~/.nvm/nvm.sh && npm install && npm run build && pm2 reload ecosystem.config.js`,
+      'post-deploy': `source ~/.nvm/nvm.sh && npm install && npm run build && echo 'hello' && pm2 reload ecosystem.config.js`,
     },
   },
 };
