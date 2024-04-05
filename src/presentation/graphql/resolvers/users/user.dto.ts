@@ -37,7 +37,7 @@ export class UsersFilterDto {
   @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
-  size?: number;
+  page?: number;
 
   @Field({ nullable: true })
   @IsOptional()

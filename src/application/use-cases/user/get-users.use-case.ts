@@ -9,6 +9,9 @@ export class GetUsersUseCase implements GetUsersUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
 
   async execute(filter: GetUsersRequest): Promise<GetUsersResponse> {
-    return this.grpcService.userService.listUser(filter);
+    console.log('zo');
+    const res = await this.grpcService.userService.listUser(filter);
+    console.log({ res });
+    return res;
   }
 }
