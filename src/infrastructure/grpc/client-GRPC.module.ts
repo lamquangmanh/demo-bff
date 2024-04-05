@@ -4,36 +4,39 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MICROSERVICE_NAME, PACKAGE_NAME } from 'src/domain/common/constants';
 import { GRPCService } from './gRPC.service';
 import { GrpcContextAbstract } from 'src/domain/abstracts/grpcContext.abstract';
+import { ConfigModule } from '../configs';
+import { ConfigService } from '@nestjs/config';
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: MICROSERVICE_NAME.USERS_SERVICE,
-        transport: Transport.GRPC,
-        options: {
-          package: PACKAGE_NAME.USERS,
-          protoPath: './protos/users.proto',
-          url: '0.0.0.0:50051',
-        },
-      },
-    ]),
-    // ClientsModule.registerAsync([
+    // ClientsModule.register([
     //   {
     //     name: MICROSERVICE_NAME.USERS_SERVICE,
-    //     imports: [ConfigModule],
-    //     useFactory: async (configService: ConfigService) => {
-    //       console.log(process.env.SERVICE_HOST);
-    //       return {
-    //         transport: Transport.GRPC,
-    //         options: {
-    //           package: PACKAGE_NAME.USERS,
-    //           protoPath: './protos/users.proto',
-    //           url: process.env.SERVICE_HOST || '0.0.0.0:50051',
-    //         },
-    //       };
+    //     transport: Transport.GRPC,
+    //     options: {
+    //       package: PACKAGE_NAME.USERS,
+    //       protoPath: './protos/users.proto',
+    //       url: '0.0.0.0:50051',
     //     },
     //   },
     // ]),
+    ClientsModule.registerAsync([
+      {
+        name: MICROSERVICE_NAME.USERS_SERVICE,
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => {
+          console.log(configService.get<string>('serviceHost'));
+          return {
+            transport: Transport.GRPC,
+            options: {
+              package: PACKAGE_NAME.USERS,
+              protoPath: './protos/users.proto',
+              url: configService.get<string>('serviceHost') || '0.0.0.0:50051',
+            },
+          };
+        },
+      },
+    ]),
   ],
   providers: [{ provide: GrpcContextAbstract, useClass: GRPCService }],
   exports: [GrpcContextAbstract],
