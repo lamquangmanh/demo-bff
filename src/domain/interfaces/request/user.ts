@@ -1,6 +1,6 @@
 export interface GetUsersRequest {
-  size?: number;
-  limit?: number;
+  pageSize?: number;
+  page?: number;
   name?: string;
   sort?: string;
 }
