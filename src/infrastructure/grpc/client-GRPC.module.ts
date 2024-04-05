@@ -25,7 +25,6 @@ import { ConfigService } from '@nestjs/config';
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: async (configService: ConfigService) => {
-          console.log(configService.get<string>('serviceHost'));
           return {
             transport: Transport.GRPC,
             options: {

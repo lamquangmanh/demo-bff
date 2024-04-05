@@ -4,9 +4,9 @@ import { AddUserRequest, GetUsersRequest, UpdateUserRequest } from '../request';
 import { DeleteUserResponse, GetUsersResponse, UpdateUserResponse } from '../response';
 
 export interface IUserService extends GrpcServiceAbstract<User> {
-  get(id: number): Promise<User>;
-  list(filter: GetUsersRequest): Promise<GetUsersResponse>;
-  delete(id: number): Promise<DeleteUserResponse>;
-  update(data: UpdateUserRequest): Promise<UpdateUserResponse>;
-  create(data: AddUserRequest): Promise<User>;
+  getUser(id: number): Promise<User>;
+  listUser(filter: GetUsersRequest): Promise<GetUsersResponse>;
+  deleteUser(id: number): Promise<DeleteUserResponse>;
+  updateUser(data: UpdateUserRequest): Promise<UpdateUserResponse>;
+  addUser(data: AddUserRequest): Promise<User>;
 }

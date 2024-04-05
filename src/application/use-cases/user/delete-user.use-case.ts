@@ -7,6 +7,6 @@ import { DeleteUserUseCaseAbstract } from '@src/domain/use-cases';
 export class DeleteUserUseCase implements DeleteUserUseCaseAbstract {
   constructor(private grpcService: GrpcContextAbstract) {}
   async execute(id: number): Promise<DeleteUserResponse> {
-    return this.grpcService.userService.delete(id);
+    return this.grpcService.userService.deleteUser(id);
   }
 }
