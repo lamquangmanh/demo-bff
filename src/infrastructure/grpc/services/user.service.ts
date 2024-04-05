@@ -20,43 +20,43 @@ export class UserService implements IUserService {
     this.logger = new Logger(UserService.name);
   }
 
-  async get(id: number): Promise<User> {
+  async getUser(id: number): Promise<User> {
     try {
-      const result = await lastValueFrom(this.userGrpcService.get(id));
+      const result = await lastValueFrom(this.userGrpcService.getUser(id));
       return result;
     } catch (err) {
       this.logger.error(JSON.stringify(err));
     }
   }
 
-  async list(filter: GetUsersRequest): Promise<GetUsersResponse> {
+  async listUser(filter: GetUsersRequest): Promise<GetUsersResponse> {
     try {
-      const result = await lastValueFrom(this.userGrpcService.list(filter));
+      const result = await lastValueFrom(this.userGrpcService.listUser(filter));
       return result;
     } catch (err) {
       this.logger.error(JSON.stringify(err));
     }
   }
 
-  async delete(id: number): Promise<DeleteUserResponse> {
+  async deleteUser(id: number): Promise<DeleteUserResponse> {
     try {
-      return lastValueFrom(this.userGrpcService.delete(id));
+      return lastValueFrom(this.userGrpcService.deleteUser(id));
     } catch (err) {
       this.logger.error(JSON.stringify(err));
     }
   }
 
-  async update(data: UpdateUserRequest): Promise<UpdateUserResponse> {
+  async updateUser(data: UpdateUserRequest): Promise<UpdateUserResponse> {
     try {
-      return lastValueFrom(this.userGrpcService.update(data));
+      return lastValueFrom(this.userGrpcService.updateUser(data));
     } catch (err) {
       this.logger.error(JSON.stringify(err));
     }
   }
 
-  async create(data: AddUserRequest): Promise<User> {
+  async addUser(data: AddUserRequest): Promise<User> {
     try {
-      return lastValueFrom(this.userGrpcService.create(data));
+      return lastValueFrom(this.userGrpcService.addUser(data));
     } catch (err) {
       this.logger.error(JSON.stringify(err));
     }

@@ -5,9 +5,9 @@ import { DeleteUserResponse, GetUsersResponse, UpdateUserResponse } from '../res
 import { User } from '@src/domain/entities';
 
 export interface IUserGrpcService extends GrpcServiceAbstract<User> {
-  get(id: number): Observable<User>;
-  list(filter: GetUsersRequest): Observable<GetUsersResponse>;
-  delete(id: number): Observable<DeleteUserResponse>;
-  update(data: UpdateUserRequest): Observable<UpdateUserResponse>;
-  create(data: AddUserRequest): Observable<User>;
+  getUser(id: number): Observable<User>;
+  listUser(filter: GetUsersRequest): Observable<GetUsersResponse>;
+  deleteUser(id: number): Observable<DeleteUserResponse>;
+  updateUser(data: UpdateUserRequest): Observable<UpdateUserResponse>;
+  addUser(data: AddUserRequest): Observable<User>;
 }
