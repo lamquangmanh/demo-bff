@@ -32,12 +32,12 @@ export class UsersFilterDto {
   @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
-  size?: number;
+  pageSize?: number;
 
   @Field({ nullable: true })
   @IsOptional()
   @IsNumber()
-  limit?: number;
+  size?: number;
 
   @Field({ nullable: true })
   @IsOptional()
