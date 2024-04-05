@@ -1,6 +1,6 @@
-import { IsBoolean, IsNumber, IsOptional, validateSync } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { Environment } from '../enums/system.enum';
+import { Environment } from '@domain/enums/env-system.enum';
 import { Module } from '@nestjs/common';
 import { ConfigModule as ConfigModuleNestJs } from '@nestjs/config';
 
@@ -11,6 +11,10 @@ class EnvironmentVariables {
   @IsOptional()
   @IsBoolean()
   DEBUG: boolean;
+
+  // SERVICE
+  @IsString()
+  SERVICE_HOST: string;
 }
 
 const validateEnv = (config: Record<string, unknown>) => {
@@ -38,6 +42,7 @@ const configEnv = () => ({
   isProd: Environment.Production === process.env.NODE_ENV,
   isDev: Environment.Development === process.env.NODE_ENV,
   debug: Boolean(process.env.DEBUG === 'true'),
+  serviceHost: process.env.SERVICE_HOST,
 });
 
 @Module({

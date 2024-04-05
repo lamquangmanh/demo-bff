@@ -1,0 +1,3 @@
+export const SAMPLE_EXCEPTION = {
+  SAMPLE: 'SAMPLE_NOT_FOUND',
+};

@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
-import { formatError } from 'graphql';
-import { GraphQLResolversModule } from './graphql/graphql-resolvers.module';
+import { GraphQLResolversModule } from './presentation/graphql/graphql-resolvers.module';
 import { ConfigModule } from './infrastructure/configs/env.config';
+import { APP_FILTER } from '@nestjs/core';
+import {
+  GlobalException,
+  formatError,
+} from './presentation/graphql/common/exceptions/global.exception';
+import { LoggerModule } from './infrastructure/libs/logger';
 
 @Module({
   imports: [
@@ -16,7 +21,13 @@ import { ConfigModule } from './infrastructure/configs/env.config';
       },
     }),
     GraphQLResolversModule,
+    LoggerModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalException,
+    },
+  ],
 })
 export class AppModule {}
