@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 import { User } from '@src/domain/entities';
 import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
 import { AddUserRequest, GetUsersRequest, UpdateUserRequest } from '@src/domain/interfaces/request';
@@ -8,16 +9,16 @@ import {
   UpdateUserResponse,
 } from '@src/domain/interfaces/response';
 import { IUserService } from '@src/domain/interfaces/service/user-service';
-import { Logger } from '@src/infrastructure/libs/logger';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class UserService implements IUserService {
   private userGrpcService: IUserGrpcService;
-  private logger;
-  constructor(service: IUserGrpcService) {
+  private logger: LoggerAbstract;
+
+  constructor(service: IUserGrpcService, _logger: LoggerAbstract) {
     this.userGrpcService = service;
-    this.logger = new Logger(UserService.name);
+    this.logger = _logger;
   }
 
   async getUser(id: number): Promise<User> {
@@ -25,7 +26,7 @@ export class UserService implements IUserService {
       const result = await lastValueFrom(this.userGrpcService.getUser(id));
       return result;
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(UserService.name + JSON.stringify(err));
     }
   }
 
@@ -34,7 +35,7 @@ export class UserService implements IUserService {
       const result = await lastValueFrom(this.userGrpcService.listUser(filter));
       return result;
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(UserService.name + JSON.stringify(err));
     }
   }
 
@@ -42,7 +43,7 @@ export class UserService implements IUserService {
     try {
       return lastValueFrom(this.userGrpcService.deleteUser(id));
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(UserService.name + JSON.stringify(err));
     }
   }
 
@@ -50,7 +51,7 @@ export class UserService implements IUserService {
     try {
       return lastValueFrom(this.userGrpcService.updateUser(data));
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(UserService.name + JSON.stringify(err));
     }
   }
 
@@ -58,7 +59,7 @@ export class UserService implements IUserService {
     try {
       return lastValueFrom(this.userGrpcService.addUser(data));
     } catch (err) {
-      this.logger.error(JSON.stringify(err));
+      this.logger.error(UserService.name + JSON.stringify(err));
     }
   }
 }
