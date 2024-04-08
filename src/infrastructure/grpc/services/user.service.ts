@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 import { User } from '@src/domain/entities';
 import { IUserGrpcService } from '@src/domain/interfaces/grpc-service/user-grpc-service';
-import { AddUserRequest, GetUsersRequest, UpdateUserRequest } from '@src/domain/interfaces/request';
+import {
+  AddUserRequest,
+  DeleteRequest,
+  GetUserByIdRequest,
+  GetUsersRequest,
+  UpdateUserRequest,
+} from '@src/domain/interfaces/request';
 import {
   DeleteUserResponse,
   GetUsersResponse,
@@ -21,9 +27,9 @@ export class UserService implements IUserService {
     this.logger = _logger;
   }
 
-  async getUser(id: number): Promise<User> {
+  async getUser(data: GetUserByIdRequest): Promise<User> {
     try {
-      const result = await lastValueFrom(this.userGrpcService.getUser(id));
+      const result = await lastValueFrom(this.userGrpcService.getUser(data));
       return result;
     } catch (err) {
       this.logger.error(UserService.name + JSON.stringify(err));
@@ -39,9 +45,9 @@ export class UserService implements IUserService {
     }
   }
 
-  async deleteUser(id: number): Promise<DeleteUserResponse> {
+  async deleteUser(data: DeleteRequest): Promise<DeleteUserResponse> {
     try {
-      return lastValueFrom(this.userGrpcService.deleteUser(id));
+      return lastValueFrom(this.userGrpcService.deleteUser(data));
     } catch (err) {
       this.logger.error(UserService.name + JSON.stringify(err));
     }
