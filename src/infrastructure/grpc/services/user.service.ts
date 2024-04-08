@@ -25,6 +25,7 @@ export class UserService implements IUserService {
   constructor(service: IUserGrpcService, _logger: LoggerAbstract) {
     this.userGrpcService = service;
     this.logger = _logger;
+    this.logger.init('GRPCmodule', 'UserService');
   }
 
   async getUser(data: GetUserByIdRequest): Promise<User> {
@@ -39,6 +40,7 @@ export class UserService implements IUserService {
   async listUser(filter: GetUsersRequest): Promise<GetUsersResponse> {
     try {
       const result = await lastValueFrom(this.userGrpcService.listUser(filter));
+      this.logger.info('haha====');
       return result;
     } catch (err) {
       this.logger.error(UserService.name + JSON.stringify(err));

@@ -10,6 +10,7 @@ import {
 import { LoggerModule } from './infrastructure/libs/logger';
 import { JsonScalar } from './presentation/graphql/common/scalar/json.scalar';
 import { LoggerMiddleware } from './presentation/graphql/common/middlewares/logger.middleware';
+import { JwtModule } from './infrastructure/libs/jwt/jwt.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LoggerMiddleware } from './presentation/graphql/common/middlewares/logg
     }),
     GraphQLResolversModule,
     LoggerModule,
+    JwtModule,
   ],
   providers: [
     JsonScalar,

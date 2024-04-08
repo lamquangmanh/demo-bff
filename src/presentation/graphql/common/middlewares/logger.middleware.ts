@@ -6,9 +6,10 @@ import { v4 as uuid } from 'uuid';
 export class LoggerMiddleware implements NestMiddleware {
   constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {}
   use(req: Request, res: Response, next: NextFunction) {
-    this.logger.setRequestId(
-      req.headers['x-request-id'] ? req.headers['x-request-id'] : (uuid() as any),
-    );
+    req.headers['x-request-id'] = req.headers['x-request-id'] || uuid();
+    this.logger.init('AppModule', 'LoggerMiddleware');
+    this.logger.setRequestContext(req.headers['x-request-id'] as string, 'user-123');
+    this.logger.info('begin: ');
     next();
   }
 }

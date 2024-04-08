@@ -5,10 +5,12 @@ import { Sample } from 'src/domain/entities';
 
 @Injectable()
 export class AddSampleUseCase implements AddSampleUseCaseAbstract {
-  constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {}
+  constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {
+    this.logger.init('UserUseCaseModule', 'AddSampleUseCase');
+  }
 
   execute({ name }: { name: string }): Sample {
-    this.logger.log('hello');
+    this.logger.info('hello');
 
     return {
       name,
