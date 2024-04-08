@@ -2,8 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""json custom scalar type"""
+scalar Json
+
 type Query {
-  Sample: Sample!
+  sample: Sample!
 }
 
 type Sample {
