@@ -10,6 +10,9 @@ export class GetUsersUseCase implements GetUsersUseCaseAbstract {
 
   async execute(filter: GetUsersRequest): Promise<GetUsersResponse> {
     const res = await this.grpcService.userService.listUser(filter);
+    if (!res?.data) {
+      res.data = [];
+    }
     return res;
   }
 }

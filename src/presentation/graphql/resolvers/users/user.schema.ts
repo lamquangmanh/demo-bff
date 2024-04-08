@@ -26,8 +26,9 @@ export class PaginationSchema {
 
 @ObjectType('GetUsersResponse')
 export class GetUsersResponseSchema {
-  @Field(() => [UserSchema])
-  data: UserSchema[];
+  // @Field(() => [UserSchema])
+  @Field(() => [UserSchema], { nullable: true })
+  data?: UserSchema[];
 
   @Field()
   total: number;
