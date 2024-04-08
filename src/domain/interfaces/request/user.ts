@@ -15,3 +15,11 @@ export interface AddUserRequest {
   name: string;
   username: string;
 }
+
+export interface DeleteRequest {
+  id: number;
+}
+
+export interface GetUserByIdRequest {
+  id: number;
+}
