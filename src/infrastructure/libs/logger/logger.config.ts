@@ -1,5 +1,8 @@
-import { ConsoleLogger } from '@nestjs/common';
+import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
 
+@Injectable({
+  scope: Scope.REQUEST,
+})
 export class Logger extends ConsoleLogger {
   error(message: any, userId?: string, stack?: string, context?: string) {
     super.error(`${message} [${userId}]`, stack, context);
