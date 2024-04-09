@@ -19,25 +19,25 @@ export class ConsoleLogger implements LoggerAbstract {
   }
   error(message: any) {
     logger({ level: 'error' }).error(
-      `moduleName: ${this.moduleName} providerName: ${this.providerName} requestId: ${this.requestId} userId: ${this.userId} message: ${message}`,
+      `[${this.moduleName}/${this.providerName}] [${this.requestId}] [${this.userId}] message: ${JSON.stringify(message)}`,
     );
   }
 
   info(message: any) {
     logger({ level: 'info' }).info(
-      `moduleName: ${this.moduleName} providerName: ${this.providerName} requestId: ${this.requestId} userId: ${this.userId} message: ${message}`,
+      `[${this.moduleName}/${this.providerName}] [${this.requestId}] [${this.userId}] message: ${JSON.stringify(message)}`,
     );
   }
 
   warn(message: any) {
     logger({ level: 'warn' }).warn(
-      `moduleName: ${this.moduleName} providerName: ${this.providerName} requestId: ${this.requestId} userId: ${this.userId} message: ${message}`,
+      `[${this.moduleName}/${this.providerName}] [${this.requestId}] [${this.userId}] message: ${JSON.stringify(message)}`,
     );
   }
 
   debug(message: any) {
     logger({ level: 'debug' }).debug(
-      `moduleName: ${this.moduleName} providerName: ${this.providerName} requestId: ${this.requestId} userId: ${this.userId} message: ${message}`,
+      `[${this.moduleName}/${this.providerName}] [${this.requestId}] [${this.userId}] message: ${JSON.stringify(message)}`,
     );
   }
 }

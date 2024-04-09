@@ -9,7 +9,7 @@ export class GlobalException implements ExceptionFilter {
   }
 
   catch(exception: any): void {
-    this.logger.error(`~ exception: ${JSON.stringify(exception)}`);
+    this.logger.error(`~ exception: ${exception}`);
 
     if (exception?.errorCode) {
       throw new GraphQLError(
