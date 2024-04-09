@@ -4,10 +4,12 @@ import { GetSampleUseCaseAbstract } from '@src/domain/use-cases/get-sample.abstr
 
 @Injectable()
 export class GetSampleUseCase implements GetSampleUseCaseAbstract {
-  constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {}
+  constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {
+    this.logger.init('UserUseCaseModule', 'AddSampleUseCase');
+  }
 
   execute() {
-    this.logger.log('hiiii');
+    this.logger.info('hiiii');
 
     return {
       name: 'hello word',

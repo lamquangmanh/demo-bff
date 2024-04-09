@@ -1,30 +1,43 @@
-import { ConsoleLogger, Injectable, Scope } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
+import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 
-@Injectable({
-  scope: Scope.REQUEST,
-})
-export class Logger extends ConsoleLogger {
-  error(message: any, userId?: string, stack?: string, context?: string) {
-    super.error(`${message} [${userId}]`, stack, context);
+@Injectable({ scope: Scope.TRANSIENT })
+export class Logger implements LoggerAbstract {
+  private _requestId: string;
+  private _userId: string;
+  private _moduleName: string;
+  private _providerName: string;
+
+  init(moduleName: string, providerName: string) {
+    this._moduleName = moduleName;
+    this._providerName = providerName;
   }
 
-  log(message: any, userId?: string, context?: string) {
-    super.error(`${message} [${userId}]`, context);
+  setRequestContext(requestId: string, userId: string) {
+    this._requestId = requestId;
+    this._userId = userId;
+  }
+  error(message: any) {
+    console.error(
+      `module-name: ${this._moduleName} provider-name: ${this._providerName} x-request-id: ${this._requestId} user-id: ${this._userId} message: ${message}`,
+    );
   }
 
-  warn(message: any, userId?: string, context?: string) {
-    super.error(`${message} [${userId}]`, context);
+  info(message: any) {
+    console.info(
+      `module-name: ${this._moduleName} provider-name: ${this._providerName} x-request-id: ${this._requestId} user-id: ${this._userId} message: ${message}`,
+    );
   }
 
-  debug(message: any, userId?: string, context?: string) {
-    super.error(`${message} [${userId}]`, context);
+  warn(message: any) {
+    console.warn(
+      `module-name: ${this._moduleName} provider-name: ${this._providerName} x-request-id: ${this._requestId} user-id: ${this._userId} message: ${message}`,
+    );
   }
 
-  verbose(message: any, userId?: string, context?: string) {
-    super.error(`${message} [${userId}]`, context);
-  }
-
-  fatal(message: any, userId?: string, context?: string) {
-    super.error(`${message} [${userId}]`, context);
+  debug(message: any) {
+    console.debug(
+      `module-name: ${this._moduleName} provider-name: ${this._providerName} x-request-id: ${this._requestId} user-id: ${this._userId} message: ${message}`,
+    );
   }
 }

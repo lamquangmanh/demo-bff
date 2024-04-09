@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
 import { GraphQLResolversModule } from './presentation/graphql/graphql-resolvers.module';
 import { ConfigModule } from './infrastructure/configs/env.config';
@@ -8,26 +8,31 @@ import {
   formatError,
 } from './presentation/graphql/common/exceptions/global.exception';
 import { LoggerModule } from './infrastructure/libs/logger';
+import { JsonScalar } from './presentation/graphql/common/scalar/json.scalar';
+import { LoggerMiddleware } from './presentation/graphql/common/middlewares/logger.middleware';
+import { JwtModule } from './infrastructure/libs/jwt/jwt.module';
 
 @Module({
   imports: [
     ConfigModule,
     GraphQLConfigsModule.register({
       formatError,
-      context: () => {
-        return {
-          dataLoaders: {},
-        };
-      },
+      context: (req) => req,
     }),
     GraphQLResolversModule,
     LoggerModule,
+    JwtModule,
   ],
   providers: [
+    JsonScalar,
     {
       provide: APP_FILTER,
       useClass: GlobalException,
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
