@@ -12,6 +12,7 @@ WORKDIR /app
 # A wildcard is used to ensure copying both package.json AND yarn.lock (when available).
 # Copying this first prevents re-running npm install on every code change.
 COPY package.json package-lock.json* ./
+COPY protos ./
 # Install app dependencies using the `yarn --frozen-lockfile` command instead of `yarn`
 RUN npm ci
 
@@ -44,6 +45,7 @@ RUN chown node .
 
 # Copy only the necessary files
 COPY --chown=node:node --from=builder /app/package*.json ./
+COPY --chown=node:node --from=builder /app/protos ./
 COPY --chown=node:node --from=builder /app/dist dist
 COPY --chown=node:node --from=builder /app/node_modules node_modules
 
@@ -51,7 +53,7 @@ COPY --chown=node:node --from=builder /app/node_modules node_modules
 USER node
 
 # Expose the port the app will run on  
-EXPOSE 3000
+EXPOSE 3333
 
 # Start the app
 CMD ["npm", "run", "start:prod"]
