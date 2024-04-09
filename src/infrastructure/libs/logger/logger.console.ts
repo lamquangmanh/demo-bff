@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 import logger from 'pino';
 @Injectable({ scope: Scope.TRANSIENT })
-export class ConsoleLogger implements LoggerAbstract {
+export class LoggerConsole implements LoggerAbstract {
   private requestId: string;
   private userId: string;
   private moduleName: string;
