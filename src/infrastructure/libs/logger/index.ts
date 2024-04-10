@@ -1,2 +1,2 @@
-export * from './logger.config';
+export * from './logger.console';
 export * from './logger.module';
