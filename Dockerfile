@@ -1,5 +1,5 @@
 # Stage 1: install dependencies
-FROM node:18-alpine AS base
+FROM node:18.17.0-bulleyes AS base
 
 # Stage 2: deps
 # Install dependencies only when needed
