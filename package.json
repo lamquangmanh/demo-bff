@@ -9,8 +9,8 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "dev": "nest start --watch | pino-pretty",
+    "start:debug": "nest start --debug --watch | pino-pretty",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -19,7 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
-    "sonar": "npx sonarqube-scanner"
+    "sonar": "npx sonarqube-scanner",
+    "deployment": "pm2 deploy ecosystem.config.js core_bff_fcm update"
   },
   "dependencies": {
     "@apollo/server": "^4.10.2",
@@ -30,14 +31,18 @@
     "@nestjs/config": "^3.2.1",
     "@nestjs/core": "^10.1.0",
     "@nestjs/graphql": "^12.1.1",
+    "@nestjs/jwt": "^10.2.0",
     "@nestjs/microservices": "^10.3.6",
     "@nestjs/platform-express": "^10.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "graphql": "^16.8.1",
+    "graphql-type-json": "^0.3.2",
     "morgan": "^1.10.0",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuidv4": "^6.2.13",
+    "pino": "^8.20.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
@@ -66,7 +71,8 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.1.3",
+    "pino-pretty": "^11.0.0"
   },
   "lint-staged": {
     "*.ts": [

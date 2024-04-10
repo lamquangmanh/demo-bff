@@ -2,10 +2,58 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddUserDto {
+  name: String!
+  username: String!
+}
+
+type DeleteUserResponse {
+  deletedCount: Float!
+}
+
+type GetUsersResponse {
+  data: [User!]
+  total: Float!
+}
+
+"""json custom scalar type"""
+scalar Json
+
+type Mutation {
+  addUser(addUserDto: AddUserDto!): User!
+  deleteUser(id: Float!): DeleteUserResponse!
+  updateUser(updateUserDto: UpdateUserDto!): UpdateUserResponse!
+}
+
 type Query {
-  Sample: Sample!
+  getUserById(id: Float!): User!
+  getUsers(usersFilterDto: UsersFilterDto!): GetUsersResponse!
+  sample: Sample!
 }
 
 type Sample {
   name: String!
+}
+
+input UpdateUserDto {
+  id: Float!
+  name: String!
+  username: String!
+}
+
+type UpdateUserResponse {
+  modifiedCount: Float!
+}
+
+type User {
+  id: Float!
+  name: String
+  username: String!
+}
+
+input UsersFilterDto {
+  name: String
+  page: Float
+  pageSize: Float
+  sort: String
 }

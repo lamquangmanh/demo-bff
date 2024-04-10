@@ -12,13 +12,13 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: docker pull abc/xxx:latest
+        run: docker pull tahinguyen/core-bff:latest
 
       - name: Delete Old docker container
-        run: docker rm -f xxx || true
+        run: docker rm -f core-bff-ctn || true
 
       - name: Run Docker Container
         env:
           PORT: ${{secrets.PORT}}
         run: |
-          docker run -d -p $PORT:$PORT --restart unless-stopped --env-file ~/.env --name xxx abc/xxx:latest
+          docker run -d -p $PORT:8888 --restart unless-stopped --env-file ~/core-fcm-team/.env --name core-bff-ctn tahinguyen/core-bff:latest

@@ -1,10 +1,15 @@
-import { ExceptionFilter, Catch } from '@nestjs/common';
+import { ExceptionFilter, Catch, Inject } from '@nestjs/common';
+import { LoggerAbstract } from '@src/domain/abstracts/logger.abstract';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Catch()
 export class GlobalException implements ExceptionFilter {
+  constructor(@Inject(LoggerAbstract) private logger: LoggerAbstract) {
+    logger.init('AppModule', 'GlobalException');
+  }
+
   catch(exception: any): void {
-    console.error('🚀 ~ GlobalException ~ exception:', exception);
+    this.logger.error(`~ exception: ${exception}`);
 
     if (exception?.errorCode) {
       throw new GraphQLError(
@@ -38,8 +43,6 @@ export const formatError = (formattedError: GraphQLFormattedError): any => {
   delete extensions['code'];
   delete extensions['statusCode'];
   delete extensions['message'];
-
-  console.error('🚀 ~ GraphqlException ~ error:', formattedError);
 
   if (['STG', 'PROD'].includes(process.env.ENV)) {
     return Object.assign(

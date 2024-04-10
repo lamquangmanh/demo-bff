@@ -10,7 +10,7 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
 
-  const port = config.get('port');
+  const port = config.get('port') || 8080;
   const env = config.get('env');
 
   app.use(morgan('tiny'));

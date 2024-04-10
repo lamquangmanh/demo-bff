@@ -2,7 +2,7 @@ name: CI Docker Pipeline
 
 on:
   push:
-    branches: ['main']
+    branches: ['dev']
 
 jobs:
   build:
@@ -19,6 +19,6 @@ jobs:
       - name: Build the Docker image
         env:
           COMMIT_SHA: ${{ github.sha }}
-        run: docker build --cache-from abc/xxx:latest -t abc/xxx:latest -t abc/xxx:$COMMIT_SHA .
+        run: docker build --cache-from tahinguyen/core-bff:latest -t tahinguyen/core-bff:latest -t tahinguyen/core-bff:$COMMIT_SHA .
       - name: Push to Dockerhub
-        run: docker push --all-tags abc/xxx
+        run: docker push --all-tags tahinguyen/core-bff
