@@ -3,8 +3,6 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Catch()
 export class GlobalException implements ExceptionFilter {
-  constructor() {}
-
   catch(exception: any): void {
     console.error('🚀 ~ GlobalException ~ exception:', exception);
 
