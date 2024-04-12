@@ -15,6 +15,9 @@ class EnvironmentVariables {
   // SERVICE
   @IsString()
   SERVICE_HOST: string;
+
+  @IsString()
+  GCP_PROJECT_ID: string;
 }
 
 const validateEnv = (config: Record<string, unknown>) => {
@@ -43,6 +46,7 @@ const configEnv = () => ({
   isDev: Environment.Development === process.env.NODE_ENV,
   debug: Boolean(process.env.DEBUG === 'true'),
   serviceHost: process.env.SERVICE_HOST,
+  gcpProjectId: process.env.GCP_PROJECT_ID,
 });
 
 @Module({
