@@ -71,3 +71,17 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## Running sonarqube local
+
+# run sonarqube
+
+$ docker run -p 9000:9000 sonarqube
+
+# Create project local https://docs.sonarsource.com/sonarqube/latest/project-administration/creating-and-importing-projects/
+
+# update config in sonar-project.properties
+
+# run test with sonarqube
+
+$ npm run sonar

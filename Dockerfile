@@ -1,19 +1,20 @@
 # Stage 1: install dependencies
-FROM node:18-alpine AS base
+FROM node:18.17.0-bullseye AS base
 
 # Stage 2: deps
 # Install dependencies only when needed
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# RUN apk add --no-cache libc6-compat
 # Set the working directory inside the container  
 WORKDIR /app 
 # Copy application dependency manifests to the container image.
 # A wildcard is used to ensure copying both package.json AND yarn.lock (when available).
 # Copying this first prevents re-running npm install on every code change.
 COPY package.json package-lock.json* ./
+COPY protos ./
 # Install app dependencies using the `yarn --frozen-lockfile` command instead of `yarn`
-RUN npm ci
+RUN  npm ci
 
 # Stage 3: build
 # Rebuild the source code only when needed
@@ -44,6 +45,7 @@ RUN chown node .
 
 # Copy only the necessary files
 COPY --chown=node:node --from=builder /app/package*.json ./
+COPY --chown=node:node --from=builder /app/protos protos
 COPY --chown=node:node --from=builder /app/dist dist
 COPY --chown=node:node --from=builder /app/node_modules node_modules
 
@@ -51,7 +53,7 @@ COPY --chown=node:node --from=builder /app/node_modules node_modules
 USER node
 
 # Expose the port the app will run on  
-EXPOSE 3000
+EXPOSE 3333
 
 # Start the app
 CMD ["npm", "run", "start:prod"]
