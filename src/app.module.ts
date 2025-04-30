@@ -1,38 +1,10 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { GraphQLConfigsModule } from './infrastructure/configs/graphql.config';
-import { GraphQLResolversModule } from './presentation/graphql/graphql-resolvers.module';
-import { ConfigModule } from './infrastructure/configs/env.config';
-import { APP_FILTER } from '@nestjs/core';
-import {
-  GlobalException,
-  formatError,
-} from './presentation/graphql/common/exceptions/global.exception';
-import { LoggerModule } from './infrastructure/libs/logger';
-import { JsonScalar } from './presentation/graphql/common/scalar/json.scalar';
-import { LoggerMiddleware } from './presentation/graphql/common/middlewares/logger.middleware';
-import { JwtModule } from './infrastructure/libs/jwt/jwt.module';
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
-  imports: [
-    ConfigModule,
-    GraphQLConfigsModule.register({
-      formatError,
-      context: (req) => req,
-    }),
-    GraphQLResolversModule,
-    LoggerModule,
-    JwtModule,
-  ],
-  providers: [
-    JsonScalar,
-    {
-      provide: APP_FILTER,
-      useClass: GlobalException,
-    },
-  ],
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
