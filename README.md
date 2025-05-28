@@ -96,3 +96,67 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## Clean Architecture principles
+
+```bash
+src/
+│
+├── domain/                 # Business logic (Entities + Interfaces)
+│   ├── entities/
+│   ├── repositories/
+│   └── types/
+│
+├── use-cases/             # Application logic (UseCases/Services)
+│   ├── user/
+│   │   ├── create-user.use-case.ts
+│   │   ├── get-user.use-case.ts
+│   │   └── ...
+│   └── auth/
+│
+├── infrastructure/        # Frameworks, DBs, and external services
+│   ├── keycloak/
+│   ├── protos/
+│   ├── database/
+│   │   ├── repositories/
+│   │   │   └── user.repository.ts
+│   │   ├── entities/
+│   │   │   └── user.entity.ts
+│   └── auth/
+│       └── jwt.strategy.ts
+│
+├── presentation/            # Controllers, Resolvers, DTOs, etc.
+│   ├── grpc/
+│   │   ├── user/
+│   │   │   ├── user.controller.ts
+│   │   │   ├── user.module.ts
+│   │   │   └── dtos/
+│   │── graphql/ (optional)
+│   └── http/ (optional)
+│
+├── common/                # Common utilities, base classes, etc.
+│   ├── constants/
+│   ├── decorators/
+│   ├── utils/
+│   └── exceptions/
+│
+├── main.ts
+└── app.module.ts
+
+```
+
+📦 Example Use Case Flow (Creating a User)
+
+HTTP request → user.controller.ts in presentation/http
+
+DTO → use-case input → passed into create-user.use-case.ts
+
+Use case calls UserRepository (from domain/repositories)
+
+Repository implementation in infrastructure/database/repositories/
+
+Response returned back up through controller.
+
+# Others documentation
+
+[Dataloader](./docs/DATALOADER.md)

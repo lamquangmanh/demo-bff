@@ -1,0 +1,31 @@
+export enum RequestType {
+  VIEW = 'VIEW',
+  HTTP = 'HTTP',
+  GRAPHQL = 'GRAPHQL',
+  GRPC = 'GRPC',
+  WEBSOCKET = 'WEBSOCKET',
+}
+
+export enum UserStatus {
+  ACTIVE = 'ACTIVE',
+  DEACTIVATED = 'DEACTIVATED',
+  DELETED = 'DELETED',
+}
+
+export enum SortOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export enum FilterOperator {
+  UNSPECIFIED = 'UNSPECIFIED',
+  EQUAL = 'EQUAL',
+  NOT_EQUAL = 'NOT_EQUAL',
+  GREATER_THAN = 'GREATER_THAN',
+  LESS_THAN = 'LESS_THAN',
+  GREATER_THAN_OR_EQUAL = 'GREATER_THAN_OR_EQUAL',
+  LESS_THAN_OR_EQUAL = 'LESS_THAN_OR_EQUAL',
+  LIKE = 'LIKE',
+  IN = 'IN',
+  NOT_IN = 'NOT_IN',
+}
