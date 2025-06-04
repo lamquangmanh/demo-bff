@@ -2,7 +2,29 @@
 import * as DataLoader from 'dataloader';
 
 // import from domain/entities
-import { ActionEntity, PermissionEntity, ModuleEntity } from '@/domain/entites';
+import {
+  ActionEntity,
+  PermissionEntity,
+  ModuleEntity,
+  UserEntity,
+} from '@/domain/entites';
+
+export interface PaginationResponse {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+  itemCount: number;
+}
+
+export interface BaseEntity {
+  createdAt?: string;
+  createdUserId?: string;
+  updatedAt?: string;
+  updatedUserId?: string;
+  deletedAt?: string;
+  deletedUserId?: string;
+}
 
 export interface Pagination {
   page: number;
@@ -42,6 +64,9 @@ export interface GraphQLContext {
     };
     moduleLoader?: {
       batchModulesByIds: DataLoader<string, ModuleEntity[]>;
+    };
+    userLoader?: {
+      batchUsersByIds: DataLoader<string, UserEntity[]>;
     };
   };
   req: any; // Express request object

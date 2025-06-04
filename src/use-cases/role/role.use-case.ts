@@ -31,17 +31,17 @@ import { RoleEntity } from '@/domain/entites';
 
 @Injectable()
 export class RoleUseCase implements OnModuleInit {
-  private RoleService!: RoleService;
+  private roleService!: RoleService;
 
   constructor(@Inject(USER_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.RoleService = this.client.getService<RoleService>('RoleService');
+    this.roleService = this.client.getService<RoleService>('RoleService');
   }
 
   async getRole(request: GetRoleRequest): Promise<RoleEntity> {
     return await getResultFromGrpc<RoleEntity>(
-      this.RoleService.GetRole(request),
+      this.roleService.GetRole(request),
     );
   }
 
@@ -52,7 +52,7 @@ export class RoleUseCase implements OnModuleInit {
     );
 
     return await getResultFromGrpc<GetRolesResponse>(
-      this.RoleService.GetRoles({
+      this.roleService.GetRoles({
         filters,
         pagination: request.pagination,
         sorts: request.sorts,
@@ -66,7 +66,7 @@ export class RoleUseCase implements OnModuleInit {
   ): Promise<CreateSuccess | undefined> {
     try {
       return await getResultFromGrpc<CreateSuccess>(
-        this.RoleService.CreateRole({
+        this.roleService.CreateRole({
           role: {
             name: request.name,
             description: request.description ?? '',
@@ -87,7 +87,7 @@ export class RoleUseCase implements OnModuleInit {
   ): Promise<UpdateSuccess | undefined> {
     try {
       return await getResultFromGrpc<UpdateSuccess>(
-        this.RoleService.UpdateRole({
+        this.roleService.UpdateRole({
           role: {
             roleId: request.roleId,
             name: request.name,
@@ -109,7 +109,7 @@ export class RoleUseCase implements OnModuleInit {
   ): Promise<DeleteSuccess | undefined> {
     try {
       return await getResultFromGrpc<DeleteSuccess>(
-        this.RoleService.DeleteRole({
+        this.roleService.DeleteRole({
           roleId: request.roleId,
           userId,
         }),

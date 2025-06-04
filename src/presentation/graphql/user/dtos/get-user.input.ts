@@ -4,10 +4,9 @@ import { IsUUID } from 'class-validator';
 // import from common
 import { returnString } from '@/common/utils';
 
-import { CreateModuleInput } from './create-module.input';
 @ArgsType()
-export class UpdateModuleInput extends CreateModuleInput {
+export class GetUserInput {
   @Field(returnString, { nullable: false })
   @IsUUID()
-  moduleId!: string;
+  userId!: string;
 }

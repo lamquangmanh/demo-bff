@@ -6,6 +6,7 @@ import { UserStatus } from '@/common/constants';
 
 // import from base
 import { BaseEntity } from '@/domain/entites/base.entity';
+import { UserRoleEntity } from '@/domain/entites/user-role.entity';
 
 @ObjectType({ description: 'User entity' })
 export class UserEntity extends BaseEntity {
@@ -29,4 +30,13 @@ export class UserEntity extends BaseEntity {
 
   @Field(() => UserStatus, { nullable: false, description: 'status' })
   status!: UserStatus;
+
+  @Field(() => UserEntity, { nullable: true, description: 'createdUser' })
+  createdUser?: UserEntity;
+
+  @Field(() => UserEntity, { nullable: true, description: 'updatedUser' })
+  updatedUser?: UserEntity;
+
+  @Field(() => [UserRoleEntity], { nullable: true })
+  userRoles?: UserRoleEntity[];
 }

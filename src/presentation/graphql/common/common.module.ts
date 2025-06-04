@@ -10,12 +10,18 @@ import {
 } from '@/common/constants';
 
 // import data-loader from presentation
-import { ActionLoader, PermissionLoader, ModuleLoader } from './data-loader';
+import {
+  ActionLoader,
+  PermissionLoader,
+  ModuleLoader,
+  UserLoader,
+} from './data-loader';
 
 // import from use-cases
 import { ActionUseCase } from '@/use-cases/action';
 import { PermissionUseCase } from '@/use-cases/permission';
 import { ModuleUseCase } from '@/use-cases/module';
+import { UserUseCase } from '@/use-cases/user';
 
 @Module({
   imports: [
@@ -46,6 +52,8 @@ import { ModuleUseCase } from '@/use-cases/module';
     PermissionUseCase,
     ModuleLoader,
     ModuleUseCase,
+    UserUseCase,
+    UserLoader,
   ],
   exports: [
     ClientsModule,
@@ -55,6 +63,8 @@ import { ModuleUseCase } from '@/use-cases/module';
     PermissionUseCase,
     ModuleLoader,
     ModuleUseCase,
+    UserUseCase,
+    UserLoader,
   ],
 })
 export class CommonModule {}

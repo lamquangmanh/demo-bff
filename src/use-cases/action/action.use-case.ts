@@ -32,19 +32,18 @@ import { ActionEntity } from '@/domain/entites';
 
 @Injectable()
 export class ActionUseCase implements OnModuleInit {
-  private ActionService!: ActionService;
+  private actionService!: ActionService;
 
   @Inject(USER_PACKAGE_NAME)
   private readonly client!: ClientGrpc;
-  // constructor() {}
 
   onModuleInit() {
-    this.ActionService = this.client.getService<ActionService>('ActionService');
+    this.actionService = this.client.getService<ActionService>('ActionService');
   }
 
   async findByIds(ids: string[]): Promise<ActionEntity[]> {
     const result = await getResultFromGrpc<GetActionsResponse>(
-      this.ActionService.GetActions({
+      this.actionService.GetActions({
         filters: [
           {
             field: 'actionId',
@@ -64,7 +63,7 @@ export class ActionUseCase implements OnModuleInit {
 
   async findByResourceIds(ids: string[]): Promise<ActionEntity[]> {
     const result = await getResultFromGrpc<GetActionsResponse>(
-      this.ActionService.GetActions({
+      this.actionService.GetActions({
         filters: [
           {
             field: 'resourceId',
@@ -84,7 +83,7 @@ export class ActionUseCase implements OnModuleInit {
 
   async getAction(request: GetActionRequest): Promise<ActionEntity> {
     return await getResultFromGrpc<ActionEntity>(
-      this.ActionService.GetAction(request),
+      this.actionService.GetAction(request),
     );
   }
 
@@ -95,7 +94,7 @@ export class ActionUseCase implements OnModuleInit {
     );
 
     return await getResultFromGrpc<GetActionsResponse>(
-      this.ActionService.GetActions({
+      this.actionService.GetActions({
         filters,
         pagination: request.pagination,
         sorts: request.sorts,
@@ -109,7 +108,7 @@ export class ActionUseCase implements OnModuleInit {
   ): Promise<CreateSuccess | undefined> {
     try {
       return await getResultFromGrpc<CreateSuccess>(
-        this.ActionService.CreateAction({
+        this.actionService.CreateAction({
           action: {
             name: request.name,
             description: request.description,
@@ -132,7 +131,7 @@ export class ActionUseCase implements OnModuleInit {
   ): Promise<UpdateSuccess | undefined> {
     try {
       return await getResultFromGrpc<UpdateSuccess>(
-        this.ActionService.UpdateAction({
+        this.actionService.UpdateAction({
           action: {
             actionId: request.actionId,
             name: request.name,
@@ -156,7 +155,7 @@ export class ActionUseCase implements OnModuleInit {
   ): Promise<DeleteSuccess | undefined> {
     try {
       return await getResultFromGrpc<DeleteSuccess>(
-        this.ActionService.DeleteAction({
+        this.actionService.DeleteAction({
           actionId: request.actionId,
           userId,
         }),

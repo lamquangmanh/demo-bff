@@ -5,6 +5,7 @@ import { returnString } from '@/common/utils';
 
 // import from base
 import { BaseEntity } from '@/domain/entites/base.entity';
+import { RoleEntity } from '@/domain/entites/role.entity';
 
 @ObjectType({ description: 'User Role entity' })
 export class UserRoleEntity extends BaseEntity {
@@ -16,4 +17,7 @@ export class UserRoleEntity extends BaseEntity {
 
   @Field(returnString, { nullable: false, description: 'roleId' })
   roleId!: string;
+
+  @Field(() => RoleEntity, { nullable: true, description: 'role' })
+  role?: RoleEntity;
 }

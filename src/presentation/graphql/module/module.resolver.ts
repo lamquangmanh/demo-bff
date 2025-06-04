@@ -4,7 +4,6 @@ import {
   UpdateSuccess,
   DeleteSuccess,
 } from '@lamquangmanh/protobuf/dist/base/v1/base';
-import { CreateSuccess } from '@lamquangmanh/protobuf/dist/module/v1/module';
 
 // import from common
 import { UserInformation } from '@/common/interfaces';

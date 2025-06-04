@@ -12,7 +12,6 @@ import {
   UpdateSuccess,
   DeleteSuccess,
 } from '@lamquangmanh/protobuf/dist/base/v1/base';
-import { CreateSuccess } from '@lamquangmanh/protobuf/dist/role/v1/role';
 import { UseInterceptors } from '@nestjs/common';
 
 // import from common

@@ -7,6 +7,7 @@ export enum RequestType {
 }
 
 export enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 'USER_STATUS_UNSPECIFIED',
   ACTIVE = 'ACTIVE',
   DEACTIVATED = 'DEACTIVATED',
   DELETED = 'DELETED',
