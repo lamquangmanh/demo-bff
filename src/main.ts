@@ -5,6 +5,11 @@ import { LoggerInterceptor } from './common/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    // Allow CORS for local
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
   app.useGlobalInterceptors(new LoggerInterceptor());
 
   await app.listen(process.env.PORT ?? 3000);

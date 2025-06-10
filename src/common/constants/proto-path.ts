@@ -8,6 +8,8 @@ export const PACKAGE_NAMES = [
   'permission.v1',
   'user.v1',
   'user_role.v1',
+  'auth.v1',
+  'menu.v1',
 ];
 
 export const PROTO_PATHS = [
@@ -19,4 +21,6 @@ export const PROTO_PATHS = [
   'permission/v1/permission.proto',
   'user/v1/user.proto',
   'user-role/v1/user-role.proto',
+  'auth/v1/auth.proto',
+  'menu/v1/menu.proto',
 ];

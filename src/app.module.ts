@@ -22,6 +22,8 @@ import {
   ActionModule,
   RoleModule,
   UserModule,
+  AuthModule,
+  MenuModule,
 } from './presentation/graphql';
 
 @Module({
@@ -53,6 +55,8 @@ import {
     ActionModule,
     RoleModule,
     UserModule,
+    AuthModule,
+    MenuModule,
   ],
   controllers: [],
   providers: [],
