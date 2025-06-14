@@ -69,9 +69,6 @@ export const convertFilterToBackend = (
         if (Array.isArray(filter.value)) {
           filterItem[mapping.valueField] = filter.value;
         } else {
-          // throw new Error(
-          //   `FILTER_OPERATOR.IN requires an array value for field "${filter.value}".`,
-          // );
           throw new ApolloError(
             `FILTER_OPERATOR.IN requires an array value for field "${filter.value}".`,
             '500',
@@ -85,9 +82,6 @@ export const convertFilterToBackend = (
         if (Array.isArray(filter.value)) {
           filterItem[mapping.valueField] = filter.value;
         } else {
-          // throw new Error(
-          //   `FILTER_OPERATOR.NOT_IN requires an array value for field "${filter.value}".`,
-          // );
           throw new ApolloError(
             `FILTER_OPERATOR.NOT_IN requires an array value for field "${filter.value}".`,
             '500',
@@ -98,7 +92,6 @@ export const convertFilterToBackend = (
       }
 
       default:
-        // throw new Error(`Unsupported filter operator: ${mapping.operator}`);
         throw new ApolloError(
           `Unsupported filter operator: ${mapping.operator}`,
           '500',
@@ -118,8 +111,14 @@ export const convertFilterToBackend = (
  * @returns
  */
 export const getResultFromGrpc = async <T>(query: any): Promise<T> => {
-  const result = await lastValueFrom(query);
-  return result as T;
+  const result: T = await lastValueFrom(query);
+
+  // set data to empty array if not exist
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (!result?.data) result.data = [];
+
+  return result;
 };
 
 /**
@@ -130,6 +129,7 @@ export const getResultFromGrpc = async <T>(query: any): Promise<T> => {
 export const graphqlFormatError = (
   formattedError: GraphQLFormattedError,
 ): any => {
+  console.error('GraphQL Error:', formattedError);
   const extensions = formattedError?.extensions;
 
   return {

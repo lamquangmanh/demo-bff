@@ -7,6 +7,7 @@ export * from './role.entity';
 export * from './user-role.entity';
 export * from './user.entity';
 export * from './user-information.entity';
+export * from './product.entity';
 
 export * from './pagination.args';
 export * from './pagination.response';

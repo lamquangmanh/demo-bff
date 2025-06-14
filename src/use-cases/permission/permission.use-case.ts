@@ -6,6 +6,7 @@ import {
   GetPermissionRequest,
   GetPermissionsResponse,
   CreateSuccess,
+  GetPermissionsByUserIdResponse,
 } from '@lamquangmanh/protobuf/dist/permission/v1/permission';
 import {
   UpdateSuccess,
@@ -80,6 +81,16 @@ export class PermissionUseCase implements OnModuleInit {
     );
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (result?.data as any[]) ?? [];
+  }
+
+  async getPermissionsByUser(
+    userId: string,
+  ): Promise<GetPermissionsByUserIdResponse> {
+    return await getResultFromGrpc<GetPermissionsByUserIdResponse>(
+      this.permissionService.GetPermissionsByUserId({
+        userId,
+      }),
+    );
   }
 
   async getPermission(

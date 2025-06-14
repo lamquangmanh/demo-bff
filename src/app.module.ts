@@ -9,6 +9,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
 // import from common
 import { configValidationSchema } from './common/configs';
 import { graphqlFormatError } from './common/utils';
+import { FlexibleValueScalar } from './common/scalars';
 // register the enum with GraphQL
 import './common/graphql-enum';
 // import from middleware
@@ -24,6 +25,8 @@ import {
   UserModule,
   AuthModule,
   MenuModule,
+  PermissionModule,
+  ProductModule,
 } from './presentation/graphql';
 
 @Module({
@@ -57,9 +60,11 @@ import {
     UserModule,
     AuthModule,
     MenuModule,
+    PermissionModule,
+    ProductModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [FlexibleValueScalar],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

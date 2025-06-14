@@ -14,6 +14,12 @@ export class ModuleEntity extends BaseEntity {
   @Field(returnString, { nullable: false, description: 'Name' })
   name!: string;
 
+  @Field(returnString, { nullable: true })
+  url?: string;
+
+  @Field(returnString, { nullable: true })
+  icon?: string;
+
   @Field(returnString, {
     nullable: true,
     description: 'Optional description of the action',

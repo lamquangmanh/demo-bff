@@ -3,14 +3,14 @@ import { IsString } from 'class-validator';
 
 // import from common
 import { returnString } from '@/common/utils';
-
+import { FlexibleValueScalar, AllowedValue } from '@/common/scalars';
 @InputType()
 export class FilterArgs {
   @Field(returnString, { nullable: false })
   @IsString()
   field!: string;
 
-  @Field(returnString, { nullable: false })
+  @Field(() => FlexibleValueScalar, { nullable: false })
   @IsString()
-  value!: string;
+  value!: AllowedValue;
 }

@@ -123,3 +123,16 @@ export const FILTER_LIST_PERMISSION = [
     valueField: 'stringValue',
   },
 ];
+
+export const FILTER_LIST_PRODUCT = [
+  {
+    field: 'productId',
+    operator: FILTER_OPERATOR.EQUAL,
+    valueField: 'stringValue',
+  },
+  {
+    field: 'name',
+    operator: FILTER_OPERATOR.LIKE,
+    valueField: 'stringValue',
+  },
+];

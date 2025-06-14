@@ -89,7 +89,7 @@ export class ModuleUseCase implements OnModuleInit {
       return await getResultFromGrpc<CreateSuccess>(
         this.moduleService.CreateModule({
           module: {
-            name: request.name,
+            ...request,
             description: request.description ?? '',
           },
           userId,
@@ -108,8 +108,7 @@ export class ModuleUseCase implements OnModuleInit {
       return await getResultFromGrpc<UpdateSuccess>(
         this.moduleService.UpdateModule({
           module: {
-            moduleId: request.moduleId,
-            name: request.name,
+            ...request,
             description: request.description ?? '',
           },
           userId,

@@ -1,12 +1,12 @@
 export interface CreateModuleRequest {
   name: string;
   description?: string;
+  url?: string;
+  icon?: string;
 }
 
-export interface UpdateModuleRequest {
+export interface UpdateModuleRequest extends CreateModuleRequest {
   moduleId: string;
-  name: string;
-  description?: string;
 }
 
 export interface DeleteModuleRequest {

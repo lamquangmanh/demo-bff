@@ -5,3 +5,4 @@ export * from './user.use-case';
 export * from './role.use-case';
 export * from './permission.use-case';
 export * from './auth.use-case';
+export * from './product.use-case';

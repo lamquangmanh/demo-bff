@@ -14,3 +14,14 @@ export interface UpdatePermissionRequest {
 export interface DeletePermissionRequest {
   permissionId: string;
 }
+
+export interface PermissionInfo {
+  name: string;
+  requestType: string;
+  url: string;
+  icon?: string;
+}
+
+export interface GetPermissionsByUserResponse {
+  permissions: PermissionInfo[];
+}
