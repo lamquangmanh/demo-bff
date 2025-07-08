@@ -13,3 +13,19 @@ export const configValidationSchema = Joi.object({
   BE_HTTP_URL: Joi.string().required(),
   BE_GRPC_URL: Joi.string().required(),
 });
+
+export const getConfiguration = () => {
+  return {
+    // Environment variables
+    NODE_ENV: process.env.NODE_ENV,
+
+    // Server configuration port running
+    PORT: process.env.PORT,
+
+    // gRPC server configuration
+    BE_HTTP_URL: process.env.GRPC_HOST,
+    BE_GRPC_URL: Number(process.env.GRPC_PORT),
+  };
+};
+
+console.log('Configuration loaded:', getConfiguration());
