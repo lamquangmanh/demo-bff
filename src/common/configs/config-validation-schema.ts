@@ -23,8 +23,8 @@ export const getConfiguration = () => {
     PORT: process.env.PORT,
 
     // gRPC server configuration
-    BE_HTTP_URL: process.env.GRPC_HOST,
-    BE_GRPC_URL: Number(process.env.GRPC_PORT),
+    BE_HTTP_URL: process.env.BE_HTTP_URL,
+    BE_GRPC_URL: Number(process.env.BE_GRPC_URL),
   };
 };
 
