@@ -12,6 +12,7 @@ async function bootstrap() {
   });
   app.useGlobalInterceptors(new LoggerInterceptor());
 
+  console.log(process.env);
   await app.listen(process.env.PORT ?? 3000);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
