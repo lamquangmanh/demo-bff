@@ -145,6 +145,7 @@ export const graphqlFormatError = (
  * @returns
  */
 export const throwErrorFromGrpc = (error: any): any => {
+  console.error('gRPC Error:', error);
   const errorData = JSON.parse(error?.details ?? '{}');
   throw new ApolloError(errorData.message, errorData.code, {
     extra: errorData.extra,

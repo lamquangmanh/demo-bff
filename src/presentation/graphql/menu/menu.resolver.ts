@@ -19,6 +19,7 @@ export class MenuResolver {
   async getSuperMenus(
     @Context('user') user: UserInformation,
   ): Promise<GetSuperMenusResponse> {
+    console.log('Fetching super menus for user:', user);
     const result: GetSuperMenusResponse | undefined =
       await this.useCase.getSuperMenus(user.userId);
     if (!result) {
