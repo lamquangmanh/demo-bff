@@ -24,7 +24,7 @@ export const getConfiguration = () => {
 
     // gRPC server configuration
     BE_HTTP_URL: process.env.BE_HTTP_URL,
-    BE_GRPC_URL: Number(process.env.BE_GRPC_URL),
+    BE_GRPC_URL: process.env.BE_GRPC_URL,
   };
 };
 
