@@ -30,6 +30,7 @@ import { UserUseCase } from '@/use-cases/user';
         name: USER_PACKAGE_NAME,
         transport: Transport.GRPC,
         options: {
+          url: process.env.BE_GRPC_URL ?? 'localhost:5000',
           package: PACKAGE_NAMES,
           protoPath: PROTO_PATHS,
           loader: {
