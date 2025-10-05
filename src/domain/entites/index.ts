@@ -16,3 +16,4 @@ export * from './sort.agrs';
 export * from './get-list.args';
 export * from './update-success.response';
 export * from './delete-success.response';
+export * from './base.entity';

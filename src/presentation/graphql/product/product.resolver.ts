@@ -1,4 +1,5 @@
 // import from libraries
+import { UseInterceptors } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import {
   UpdateSuccess,
@@ -7,6 +8,7 @@ import {
 
 // import from common
 import { UserInformation } from '@/common/interfaces';
+import { DataLoaderInterceptor } from '@/common/interceptors';
 
 // import from domain/entities
 import {
@@ -18,6 +20,7 @@ import {
 
 // import from use-cases
 import { ProductUseCase } from '@/use-cases/product';
+import { UserUseCase } from '@/use-cases/user';
 
 // import from presentation
 import {
@@ -27,17 +30,23 @@ import {
   UpdateProductInput,
   GetProductsResponse,
 } from './dtos';
+import { BaseResolver } from '../base.resolver';
 
+@UseInterceptors(DataLoaderInterceptor)
 @Resolver(() => ProductEntity)
-export class ProductResolver {
-  constructor(private readonly useCase: ProductUseCase) {}
+export class ProductResolver extends BaseResolver {
+  constructor(
+    private readonly useCase: ProductUseCase,
+    protected readonly userUseCase: UserUseCase,
+  ) {
+    super(userUseCase);
+  }
 
   @Query(() => GetProductsResponse, { name: 'products' })
   async getProducts(
     @Args() query: GetListArgs,
   ): Promise<GetProductsResponse | undefined> {
     const data = await this.useCase.getProducts(query);
-    console.log('getProducts', data);
     return data;
   }
 

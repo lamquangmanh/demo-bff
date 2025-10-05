@@ -29,6 +29,7 @@ import {
 
 // import from use-cases
 import { ResourceUseCase } from '@/use-cases/resource';
+import { UserUseCase } from '@/use-cases/user';
 
 // import from presentation
 import {
@@ -38,11 +39,17 @@ import {
   UpdateResourceInput,
   GetResourcesResponse,
 } from './dtos';
+import { BaseResolver } from '../base.resolver';
 
 @UseInterceptors(DataLoaderInterceptor)
 @Resolver(() => ResourceEntity)
-export class ResourceResolver {
-  constructor(private readonly useCase: ResourceUseCase) {}
+export class ResourceResolver extends BaseResolver {
+  constructor(
+    private readonly useCase: ResourceUseCase,
+    protected readonly userUseCase: UserUseCase,
+  ) {
+    super(userUseCase);
+  }
 
   @Query(() => GetResourcesResponse, { name: 'resources' })
   async getResources(

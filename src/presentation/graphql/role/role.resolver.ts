@@ -30,6 +30,7 @@ import {
 
 // import from use-cases
 import { RoleUseCase } from '@/use-cases/role';
+import { UserUseCase } from '@/use-cases/user';
 
 // import from presentation
 import {
@@ -39,11 +40,17 @@ import {
   UpdateRoleInput,
   GetRolesResponse,
 } from './dtos';
+import { BaseResolver } from '../base.resolver';
 
 @UseInterceptors(DataLoaderInterceptor)
 @Resolver(() => RoleEntity)
-export class RoleResolver {
-  constructor(private readonly useCase: RoleUseCase) {}
+export class RoleResolver extends BaseResolver {
+  constructor(
+    private readonly useCase: RoleUseCase,
+    protected readonly userUseCase: UserUseCase,
+  ) {
+    super(userUseCase);
+  }
 
   @Query(() => GetRolesResponse, { name: 'roles' })
   async getRoles(@Args() query: GetListArgs): Promise<GetRolesResponse> {

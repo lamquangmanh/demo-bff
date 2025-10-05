@@ -5,8 +5,8 @@ import {
   Mutation,
   Args,
   Context,
-  ResolveField,
-  Parent,
+  // ResolveField,
+  // Parent,
 } from '@nestjs/graphql';
 import {
   UpdateSuccess,
@@ -15,7 +15,8 @@ import {
 import { UseInterceptors } from '@nestjs/common';
 
 // import from common
-import { UserInformation, GraphQLContext } from '@/common/interfaces';
+import { UserInformation } from '@/common/interfaces';
+// import { UserInformation, GraphQLContext } from '@/common/interfaces';
 import { DataLoaderInterceptor } from '@/common/interceptors';
 
 // import from domain/entities
@@ -37,11 +38,14 @@ import {
   UpdateUserInput,
   GetUsersResponse,
 } from './dtos';
+import { BaseResolver } from '../base.resolver';
 
 @UseInterceptors(DataLoaderInterceptor)
 @Resolver(() => UserEntity)
-export class UserResolver {
-  constructor(private readonly useCase: UserUseCase) {}
+export class UserResolver extends BaseResolver {
+  constructor(protected readonly useCase: UserUseCase) {
+    super(useCase);
+  }
 
   @Query(() => GetUsersResponse, { name: 'users' })
   async getUsers(@Args() query: GetListArgs): Promise<GetUsersResponse> {
@@ -75,28 +79,6 @@ export class UserResolver {
     @Context('user') user: UserInformation,
   ): Promise<DeleteSuccess | undefined> {
     return await this.useCase.deleteUser(request, user?.userId);
-  }
-
-  @ResolveField(() => [UserEntity], { name: 'createdUser' })
-  async createdUser(
-    @Parent() user: UserEntity,
-    @Context() context: GraphQLContext,
-  ): Promise<UserEntity[]> {
-    const result = await context?.loaders?.userLoader?.batchUsersByIds?.load(
-      user.createdUserId ?? '',
-    );
-    return result || [];
-  }
-
-  @ResolveField(() => [UserEntity], { name: 'updatedUser' })
-  async updatedUser(
-    @Parent() user: UserEntity,
-    @Context() context: GraphQLContext,
-  ): Promise<UserEntity[]> {
-    const result = await context?.loaders?.userLoader?.batchUsersByIds?.load(
-      user.updatedUserId ?? '',
-    );
-    return result || [];
   }
 
   // @ResolveField(() => [UserRoleEntity], { name: 'userRoles' })

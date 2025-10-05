@@ -91,6 +91,8 @@ export class ModuleUseCase implements OnModuleInit {
           module: {
             ...request,
             description: request.description ?? '',
+            icon: request.icon ?? '',
+            url: request.url ?? '',
           },
           userId,
         }),
@@ -110,6 +112,8 @@ export class ModuleUseCase implements OnModuleInit {
           module: {
             ...request,
             description: request.description ?? '',
+            icon: request.icon ?? '',
+            url: request.url ?? '',
           },
           userId,
         }),

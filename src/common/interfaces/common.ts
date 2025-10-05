@@ -66,7 +66,7 @@ export interface GraphQLContext {
       batchModulesByIds: DataLoader<string, ModuleEntity[]>;
     };
     userLoader?: {
-      batchUsersByIds: DataLoader<string, UserEntity[]>;
+      batchUsersByIds: DataLoader<string, UserEntity | null>;
     };
   };
   req: any; // Express request object

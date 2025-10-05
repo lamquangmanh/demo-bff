@@ -5,6 +5,7 @@ import { returnString } from '@/common/utils';
 
 // import from base
 import { BaseEntity } from '@/domain/entites/base.entity';
+import { ProductEntity } from './product.entity';
 
 @ObjectType({ description: 'Module entity' })
 export class ModuleEntity extends BaseEntity {
@@ -25,4 +26,10 @@ export class ModuleEntity extends BaseEntity {
     description: 'Optional description of the action',
   })
   description?: string;
+
+  @Field(returnString, { nullable: true })
+  productId!: string;
+
+  @Field(() => ProductEntity, { nullable: true })
+  product?: ProductEntity;
 }

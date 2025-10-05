@@ -28,6 +28,7 @@ import {
   PermissionModule,
   ProductModule,
 } from './presentation/graphql';
+import { HealthModule } from './presentation/http/health';
 
 @Module({
   imports: [
@@ -53,15 +54,16 @@ import {
 
     // load presentation modules
     CommonModule,
+    AuthModule,
+    ProductModule,
     ModuleModule,
     ResourceModule,
     ActionModule,
     RoleModule,
     UserModule,
-    AuthModule,
     MenuModule,
     PermissionModule,
-    ProductModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [FlexibleValueScalar],

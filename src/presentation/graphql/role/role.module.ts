@@ -11,9 +11,10 @@ import { RoleResolver } from './role.resolver';
 
 // import from use-cases
 import { RoleUseCase } from '@/use-cases/role';
+import { UserUseCase } from '@/use-cases/user';
 
 @Module({
   imports: [CommonModule],
-  providers: [RoleResolver, RoleUseCase],
+  providers: [RoleResolver, RoleUseCase, UserUseCase],
 })
 export class RoleModule {}

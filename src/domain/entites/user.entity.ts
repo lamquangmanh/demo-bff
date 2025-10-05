@@ -5,7 +5,12 @@ import { returnString } from '@/common/utils';
 import { UserStatus } from '@/common/constants';
 
 // import from base
-import { BaseEntity } from '@/domain/entites/base.entity';
+import {
+  BaseEntity,
+  // CreatedUserEntity,
+  // UpdatedUserEntity,
+  // DeletedUserEntity,
+} from '@/domain/entites/base.entity';
 import { UserRoleEntity } from '@/domain/entites/user-role.entity';
 
 @ObjectType({ description: 'User entity' })
@@ -31,11 +36,23 @@ export class UserEntity extends BaseEntity {
   @Field(() => UserStatus, { nullable: false, description: 'status' })
   status!: UserStatus;
 
-  @Field(() => UserEntity, { nullable: true, description: 'createdUser' })
-  createdUser?: UserEntity;
+  // @Field(() => CreatedUserEntity, {
+  //   nullable: true,
+  //   description: 'createdUser',
+  // })
+  // createdUser?: CreatedUserEntity;
 
-  @Field(() => UserEntity, { nullable: true, description: 'updatedUser' })
-  updatedUser?: UserEntity;
+  // @Field(() => UpdatedUserEntity, {
+  //   nullable: true,
+  //   description: 'updatedUser',
+  // })
+  // updatedUser?: UpdatedUserEntity;
+
+  // @Field(() => DeletedUserEntity, {
+  //   nullable: true,
+  //   description: 'deletedUser',
+  // })
+  // deletedUser?: DeletedUserEntity;
 
   @Field(() => [UserRoleEntity], { nullable: true })
   userRoles?: UserRoleEntity[];

@@ -1,5 +1,14 @@
 // import from libraries
-import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
+import { UseInterceptors } from '@nestjs/common';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Context,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import {
   UpdateSuccess,
   DeleteSuccess,
@@ -7,9 +16,11 @@ import {
 
 // import from common
 import { UserInformation } from '@/common/interfaces';
+import { DataLoaderInterceptor } from '@/common/interceptors';
 
 // import from domain/entities
 import {
+  ProductEntity,
   ModuleEntity,
   GetListArgs,
   UpdateSuccessResponse,
@@ -18,6 +29,8 @@ import {
 
 // import from use-cases
 import { ModuleUseCase } from '@/use-cases/module';
+import { UserUseCase } from '@/use-cases/user';
+import { ProductUseCase } from '@/use-cases/product';
 
 // import from presentation
 import {
@@ -27,10 +40,18 @@ import {
   UpdateModuleInput,
   GetModulesResponse,
 } from './dtos';
+import { BaseResolver } from '../base.resolver';
 
+@UseInterceptors(DataLoaderInterceptor)
 @Resolver(() => ModuleEntity)
-export class ModuleResolver {
-  constructor(private readonly useCase: ModuleUseCase) {}
+export class ModuleResolver extends BaseResolver {
+  constructor(
+    private readonly useCase: ModuleUseCase,
+    private readonly productUseCase: ProductUseCase,
+    protected readonly userUseCase: UserUseCase,
+  ) {
+    super(userUseCase);
+  }
 
   @Query(() => GetModulesResponse, { name: 'modules' })
   async getModules(@Args() query: GetListArgs): Promise<GetModulesResponse> {
@@ -65,5 +86,14 @@ export class ModuleResolver {
     @Context('user') user: UserInformation,
   ): Promise<DeleteSuccess | undefined> {
     return await this.useCase.deleteModule(request, user?.userId);
+  }
+
+  @ResolveField(() => ProductEntity, { name: 'product' })
+  async getProduct(
+    @Parent() entity: { productId: string },
+  ): Promise<ProductEntity | null> {
+    if (!entity.productId) return null;
+    const result = await this.productUseCase.getProduct(entity);
+    return result || null;
   }
 }

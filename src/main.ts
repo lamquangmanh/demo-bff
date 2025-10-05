@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
@@ -12,7 +13,6 @@ async function bootstrap() {
   });
   app.useGlobalInterceptors(new LoggerInterceptor());
 
-  console.log(process.env);
   await app.listen(process.env.PORT ?? 4000);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
