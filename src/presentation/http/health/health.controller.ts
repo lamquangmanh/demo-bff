@@ -1,10 +1,14 @@
 // import from libraries
 import { Controller, Get } from '@nestjs/common';
+import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 
-@Controller('/health')
+@Controller('/healthz')
 export class HealthController {
+  constructor(private readonly health: HealthCheckService) {}
+
   @Get()
-  healthCheck(): { status: string } {
-    return { status: 'ok' };
+  @HealthCheck()
+  healthCheck() {
+    return this.health.check([]);
   }
 }
