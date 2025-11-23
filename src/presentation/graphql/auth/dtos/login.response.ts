@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 // import from common
-import { returnString } from '@/common/utils';
+import { returnString, returnBoolean } from '@/common/utils';
 
 @ObjectType()
 export class LoginResponse {
@@ -10,4 +10,7 @@ export class LoginResponse {
 
   @Field(returnString, { nullable: false })
   refreshToken!: string;
+
+  @Field(returnBoolean, { nullable: false })
+  success?: boolean;
 }

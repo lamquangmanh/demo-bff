@@ -17,10 +17,12 @@ import { UseInterceptors } from '@nestjs/common';
 // import from common
 import { UserInformation, GraphQLContext } from '@/common/interfaces';
 import { DataLoaderInterceptor } from '@/common/interceptors';
+import { REQUEST_TYPE_MAPPING } from '@/common/constants';
 
 // import from domain/entities
 import {
   ActionEntity,
+  ModuleEntity,
   ResourceEntity,
   GetListArgs,
   UpdateSuccessResponse,
@@ -30,6 +32,7 @@ import {
 // import from use-cases
 import { ResourceUseCase } from '@/use-cases/resource';
 import { UserUseCase } from '@/use-cases/user';
+import { ModuleUseCase } from '@/use-cases/module';
 
 // import from presentation
 import {
@@ -47,6 +50,7 @@ export class ResourceResolver extends BaseResolver {
   constructor(
     private readonly useCase: ResourceUseCase,
     protected readonly userUseCase: UserUseCase,
+    private readonly moduleUseCase: ModuleUseCase,
   ) {
     super(userUseCase);
   }
@@ -74,7 +78,13 @@ export class ResourceResolver extends BaseResolver {
       request as any,
       user?.userId,
     );
-    return result?.resource;
+    if (result?.resource) {
+      return {
+        ...result.resource,
+        actions: [],
+      };
+    }
+    return undefined;
   }
 
   @Mutation(() => UpdateSuccessResponse, { name: 'updateResource' })
@@ -102,6 +112,15 @@ export class ResourceResolver extends BaseResolver {
       await context?.loaders?.actionLoader?.batchActionsByResourceIds?.load(
         resource.resourceId,
       );
-    return result || [];
+    const actions = result || [];
+    return actions.map((actionItem) => ({
+      ...actionItem,
+      requestType: REQUEST_TYPE_MAPPING[actionItem.requestType],
+    }));
+  }
+
+  @ResolveField(() => ModuleEntity, { name: 'module' })
+  async module(@Parent() resource: ResourceEntity): Promise<ModuleEntity> {
+    return await this.moduleUseCase.getModule({ moduleId: resource.moduleId });
   }
 }

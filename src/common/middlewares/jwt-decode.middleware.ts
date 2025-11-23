@@ -1,4 +1,9 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { parse } from 'graphql';
@@ -14,25 +19,32 @@ export class JwtDecodeMiddleware implements NestMiddleware {
       return next();
     }
 
+    const tokenFromCookie = req.cookies?.access_token;
+
     const authHeader = String(
       req.headers['Authorization'] || req.headers['authorization'],
     );
 
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.replace('Bearer ', '');
-      try {
-        // Only decode, don't verify
-        req['user'] = this.jwtService.decode(token, { json: true });
-      } catch (err: any) {
-        this.logger.error('JWT decode error:', err.message);
-        req['user'] = null;
-      }
-    } else {
+    const tokenFromHeader =
+      typeof authHeader === 'string' && authHeader.startsWith('Bearer ')
+        ? authHeader.replace('Bearer ', '')
+        : null;
+
+    const token = tokenFromCookie || tokenFromHeader;
+
+    if (!token) {
       this.logger.warn('No authorization header found or invalid format');
-      req['user'] = null;
+      throw new UnauthorizedException('Missing access token');
     }
 
-    next();
+    try {
+      // Only decode, don't verify
+      req['user'] = this.jwtService.decode(token, { json: true });
+      next();
+    } catch (err: any) {
+      this.logger.error('JWT decode error:', err.message);
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 
   isPublicOperation(req: Request): boolean {
@@ -44,8 +56,9 @@ export class JwtDecodeMiddleware implements NestMiddleware {
       const operationName = (operationAst as any)?.selectionSet?.selections[0]
         ?.name?.value;
 
-      const publicOperations = ['login', 'register', 'publicMutation']; // <- Add yours here
+      const publicOperations = ['login', 'register', '__schema'];
 
+      // console.log('Public operation check:', operationName);
       return publicOperations.includes(operationName ?? '');
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: any) {

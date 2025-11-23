@@ -73,3 +73,13 @@ export interface GraphQLContext {
   res: any; // Express response object
   [key: string]: any; // Allow additional properties
 }
+
+export interface MessageQueuePayload<T> {
+  metadata: {
+    userId: string;
+    userEmail?: string;
+    socketId?: string;
+    [key: string]: any;
+  };
+  payload: T;
+}

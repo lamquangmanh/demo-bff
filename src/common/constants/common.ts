@@ -1,3 +1,5 @@
+import { RequestType } from './enum';
+
 export const FILTER_OPERATOR = {
   UNSPECIFIED: 'UNSPECIFIED',
   EQUAL: 'EQUAL',
@@ -12,6 +14,11 @@ export const FILTER_OPERATOR = {
 };
 
 export const FILTER_LIST_MODULE = [
+  {
+    field: 'productId',
+    operator: FILTER_OPERATOR.EQUAL,
+    valueField: 'stringValue',
+  },
   {
     field: 'moduleId',
     operator: FILTER_OPERATOR.EQUAL,
@@ -136,3 +143,17 @@ export const FILTER_LIST_PRODUCT = [
     valueField: 'stringValue',
   },
 ];
+
+export const REQUEST_TYPE_MAPPING = {
+  0: RequestType.VIEW,
+  1: RequestType.HTTP,
+  2: RequestType.GRAPHQL,
+  3: RequestType.GRPC,
+  4: RequestType.WEBSOCKET,
+};
+
+// Queue and BFF Redis Client Constants
+export const BFF_REDIS_CLIENT = 'BFF_REDIS_CLIENT';
+export const QUEUE_REDIS_CLIENT = 'QUEUE_REDIS_CLIENT';
+export const BFF_TO_BE_QUEUE = 'BFF_TO_BE_QUEUE';
+export const BE_TO_BFF_QUEUE = 'BE_TO_BFF_QUEUE';

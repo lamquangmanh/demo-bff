@@ -12,9 +12,10 @@ import { ResourceResolver } from './resource.resolver';
 // import from use-cases
 import { ResourceUseCase } from '@/use-cases/resource';
 import { UserUseCase } from '@/use-cases/user';
+import { ModuleUseCase } from '@/use-cases/module';
 
 @Module({
   imports: [CommonModule],
-  providers: [ResourceResolver, ResourceUseCase, UserUseCase],
+  providers: [ResourceResolver, ResourceUseCase, UserUseCase, ModuleUseCase],
 })
 export class ResourceModule {}

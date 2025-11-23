@@ -23,12 +23,32 @@ export class AuthResolver {
   constructor(private readonly useCase: AuthUseCase) {}
 
   @Query(() => LoginResponse, { name: 'login' })
-  async login(@Args() query: LoginRequest): Promise<LoginResponse> {
+  async login(
+    @Args() query: LoginRequest,
+    @Context() context: any,
+  ): Promise<LoginResponse> {
     const result: LoginResponse | undefined = await this.useCase.login(query);
     if (!result) {
       throw new Error('Login failed: No response from use case');
     }
-    return result;
+
+    // Set HttpOnly cookie
+    context.res.cookie('access_token', result.accessToken, {
+      httpOnly: true,
+      secure: true, // true if using HTTPS
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    });
+    context.res.cookie('refresh_token', result.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    });
+
+    return { ...result, success: true };
   }
 
   @Query(() => GetMeResponse, { name: 'getMe' })

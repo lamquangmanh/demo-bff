@@ -5,9 +5,14 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 // import { DateTimeResolver } from 'graphql-scalars';
 import { JwtModule } from '@nestjs/jwt';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { BullModule } from '@nestjs/bullmq';
 
 // import from common
-import { configValidationSchema } from './common/configs';
+import {
+  configValidationSchema,
+  redisConnection,
+  configs,
+} from './common/configs';
 import { graphqlFormatError } from './common/utils';
 import { FlexibleValueScalar } from './common/scalars';
 // register the enum with GraphQL
@@ -29,6 +34,10 @@ import {
   ProductModule,
 } from './presentation/graphql';
 import { HealthModule } from './presentation/http/health';
+import { WebSocketModule } from './presentation/websocket';
+
+// import from infrastructure
+import { RedisModule } from './infrastructure/redis';
 
 @Module({
   imports: [
@@ -44,13 +53,20 @@ import { HealthModule } from './presentation/http/health';
       autoSchemaFile: true,
       playground: false,
       formatError: graphqlFormatError,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      plugins: configs.GRAPHQL_PLAYGROUND_ENABLED
+        ? [ApolloServerPluginLandingPageLocalDefault()]
+        : [],
       // resolvers: {
       //   DateTime: DateTimeResolver,
       // },
       // Pass the user context to the resolvers
-      context: ({ req }) => ({ req, user: req['user'] }),
+      context: ({ req, res }) => ({ req, res, user: req['user'] }),
     }),
+    BullModule.forRoot({
+      connection: redisConnection,
+    }),
+    RedisModule,
+    WebSocketModule,
 
     // load presentation modules
     CommonModule,
