@@ -14,6 +14,12 @@ export class JwtDecodeMiddleware implements NestMiddleware {
   constructor(private readonly jwtService: JwtService) {}
 
   use(req: Request, res: Response, next: NextFunction) {
+    // Skip JWT validation for public paths
+    const publicPaths = ['/healthz', '/health', '/metrics'];
+    if (publicPaths.includes(req.path)) {
+      return next();
+    }
+
     const isPublicOperation = this.isPublicOperation(req);
     if (isPublicOperation) {
       return next();
