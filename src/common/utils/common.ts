@@ -146,7 +146,20 @@ export const graphqlFormatError = (
  */
 export const throwErrorFromGrpc = (error: any): any => {
   console.error('gRPC Error:', error);
-  const errorData = JSON.parse(error?.details ?? '{}');
+
+  // Try to parse error details as JSON, fallback to plain text
+  let errorData: any = {};
+  try {
+    errorData = JSON.parse(error?.details ?? '{}');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e: any) {
+    // If not JSON, use plain text message
+    errorData = {
+      message: error?.details || error?.message || 'Unknown gRPC error',
+      code: error?.code || 'INTERNAL_SERVER_ERROR',
+    };
+  }
+
   throw new ApolloError(errorData.message, errorData.code, {
     extra: errorData.extra,
   });
