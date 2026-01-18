@@ -16,10 +16,10 @@ import { Injectable } from '@nestjs/common';
 import { configs } from '@/common/configs';
 import { MessageQueuePayload } from '@/common/interfaces';
 import {
-  BFF_TO_BE_QUEUE,
   USER_CONNECTED_EVENT,
   USER_DISCONNECTED_EVENT,
   MESSAGE_EVENT,
+  WSS_BFF_TO_BE_QUEUE,
 } from '@/common/constants';
 
 type ISocket = Socket & { user?: any };
@@ -36,7 +36,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server!: Server;
 
-  @InjectQueue(BFF_TO_BE_QUEUE)
+  @InjectQueue(WSS_BFF_TO_BE_QUEUE)
   private readonly bffToBeQueue!: Queue;
 
   constructor(private readonly jwtService: JwtService) {}
@@ -82,7 +82,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // assign user to socket
     (client as any).user = payload;
-    console.log(`✅ User connected: ${payload}`);
+    console.log(
+      `User connected: userId=${payload.userId}, socketId=${client.id}`,
+    );
+    console.log(payload);
 
     // publish a message to Redis for User Backend service
     const messagePayload: MessageQueuePayload<{
@@ -98,12 +101,17 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         userId: payload.userId,
         socketId: client.id,
       },
+      eventType: USER_CONNECTED_EVENT,
     };
-    await this.bffToBeQueue?.add(USER_CONNECTED_EVENT, messagePayload);
+    const job = await this.bffToBeQueue?.add(
+      USER_CONNECTED_EVENT,
+      messagePayload,
+    );
+    console.log('Published USER_CONNECTED_EVENT job:', job.id);
   }
 
   async handleDisconnect(client: ISocket) {
-    console.log('❌ User disconnected: ', client.id);
+    console.log('User disconnected: ', client.id);
 
     // publish a message to Redis for User Backend service
     const messagePayload: MessageQueuePayload<{
@@ -115,20 +123,26 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         userEmail: client.user.email,
         socketId: client.id,
       },
+      eventType: USER_DISCONNECTED_EVENT,
       payload: {
         userId: client.user.userId,
         socketId: client.id,
       },
     };
-    await this.bffToBeQueue?.add(USER_DISCONNECTED_EVENT, messagePayload, {
-      removeOnComplete: true,
-    });
+    const job = await this.bffToBeQueue?.add(
+      USER_DISCONNECTED_EVENT,
+      messagePayload,
+      {
+        removeOnComplete: true,
+      },
+    );
+    console.log('Published USER_DISCONNECTED_EVENT job:', job.id);
   }
 
   @SubscribeMessage(MESSAGE_EVENT)
   async handleMessage(client: ISocket, data: any) {
     const user = client.user;
-    console.log(`📨 Message from ${user.email}:`, data);
+    console.log(`Message from ${user.email}:`, data);
 
     // publish a message to Redis for User Backend service
     const messagePayload: MessageQueuePayload<{ any }> = {
@@ -137,6 +151,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         userEmail: user.email,
         socketId: client.id,
       },
+      eventType: MESSAGE_EVENT,
       payload: data,
     };
     await this.bffToBeQueue?.add(MESSAGE_EVENT, messagePayload, {

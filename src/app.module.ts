@@ -10,7 +10,7 @@ import { BullModule } from '@nestjs/bullmq';
 // import from common
 import {
   configValidationSchema,
-  redisConnection,
+  queueConnection,
   configs,
 } from './common/configs';
 import { graphqlFormatError } from './common/utils';
@@ -63,7 +63,7 @@ import { RedisModule } from './infrastructure/redis';
       context: ({ req, res }) => ({ req, res, user: req['user'] }),
     }),
     BullModule.forRoot({
-      connection: redisConnection,
+      connection: queueConnection,
     }),
     RedisModule,
     WebSocketModule,
