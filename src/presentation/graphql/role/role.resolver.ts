@@ -26,7 +26,7 @@ import {
   GetListArgs,
   UpdateSuccessResponse,
   DeleteSuccessResponse,
-} from '@/domain/entites';
+} from '@/domain/entities';
 
 // import from use-cases
 import { RoleUseCase } from '@/use-cases/role';

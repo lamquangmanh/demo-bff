@@ -6,7 +6,7 @@ import {
   CreatedUserEntity,
   UpdatedUserEntity,
   DeletedUserEntity,
-} from '@/domain/entites';
+} from '@/domain/entities';
 
 // import from use-cases
 import { UserUseCase } from '@/use-cases/user';

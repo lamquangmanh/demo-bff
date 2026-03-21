@@ -27,7 +27,7 @@ import {
   UpdateRoleRequest,
   DeleteRoleRequest,
 } from '@/domain/use-cases';
-import { RoleEntity } from '@/domain/entites';
+import { RoleEntity } from '@/domain/entities';
 
 @Injectable()
 export class RoleUseCase implements OnModuleInit {

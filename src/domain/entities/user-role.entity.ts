@@ -4,8 +4,8 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { returnString } from '@/common/utils';
 
 // import from base
-import { BaseEntity } from '@/domain/entites/base.entity';
-import { RoleEntity } from '@/domain/entites/role.entity';
+import { BaseEntity } from '@/domain/entities/base.entity';
+import { RoleEntity } from '@/domain/entities/role.entity';
 
 @ObjectType({ description: 'User Role entity' })
 export class UserRoleEntity extends BaseEntity {

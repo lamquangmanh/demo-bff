@@ -5,7 +5,7 @@ import { Injectable, Scope, Inject } from '@nestjs/common';
 import { PermissionUseCase } from '@/use-cases/permission';
 
 // import from domain/entities
-import { PermissionEntity } from '@/domain/entites';
+import { PermissionEntity } from '@/domain/entities';
 
 // One instance per request
 @Injectable({ scope: Scope.REQUEST })

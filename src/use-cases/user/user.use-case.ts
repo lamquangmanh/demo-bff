@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -6,6 +7,7 @@ import {
   GetUserRequest,
   // GetUsersResponse,
   CreateSuccess,
+  UserStatus as ProtoUserStatus,
 } from '@lamquangmanh/protobuf/dist/user/v1/user';
 import {
   UpdateSuccess,
@@ -14,16 +16,14 @@ import {
 } from '@lamquangmanh/protobuf/dist/base/v1/base';
 
 // import from common
-import {
-  USER_PACKAGE_NAME,
-  FILTER_LIST_USER,
-  UserStatus,
-} from '@/common/constants';
+import { USER_PACKAGE_NAME, FILTER_LIST_USER } from '@/common/constants';
 import { GetListRequest } from '@/common/interfaces';
 import {
   convertFilterToBackend,
   getResultFromGrpc,
   throwErrorFromGrpc,
+  mapUserStatus,
+  mapUserStatusToProto,
 } from '@/common/utils';
 
 // import from domain
@@ -31,9 +31,10 @@ import {
   CreateUserRequest,
   UpdateUserRequest,
   DeleteUserRequest,
+  ChangePasswordUserRequest,
   GetUsersResponse,
 } from '@/domain/use-cases';
-import { UserEntity } from '@/domain/entites';
+import { UserEntity } from '@/domain/entities';
 
 @Injectable()
 export class UserUseCase implements OnModuleInit {
@@ -63,13 +64,25 @@ export class UserUseCase implements OnModuleInit {
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return result?.data ?? [];
+    const users = result?.data ?? [];
+    // Map UserStatus for each user
+    return users.map((user: any) => ({
+      ...user,
+      status: mapUserStatus(user.status as ProtoUserStatus),
+    }));
   }
 
   async getUser(request: GetUserRequest): Promise<UserEntity> {
-    return await getResultFromGrpc<UserEntity>(
+    const user = await getResultFromGrpc<UserEntity>(
       this.userService.GetUser(request),
     );
+    // Map UserStatus
+    return {
+      ...user,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      status: mapUserStatus(user.status as ProtoUserStatus),
+    };
   }
 
   async getUsers(request: GetListRequest): Promise<GetUsersResponse> {
@@ -90,10 +103,10 @@ export class UserUseCase implements OnModuleInit {
       ...result,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      data: result.data.map((user) => ({
+      data: result.data.map((user: any) => ({
         ...user,
-        // Assuming UserStatus is compatible with the backend
-        status: user.status as unknown as UserStatus,
+        // Map protobuf numeric enum to GraphQL string enum
+        status: mapUserStatus(user.status),
       })),
     };
   }
@@ -111,8 +124,8 @@ export class UserUseCase implements OnModuleInit {
             password: request.password,
             phone: request.phone,
             avatar: request.avatar,
-            // Assuming UserStatus is compatible with the backend
-            status: request.status as any,
+            // Convert GraphQL string enum to protobuf numeric enum
+            status: mapUserStatusToProto(request.status),
             roleIds: request.roleIds || [],
           },
           userId,
@@ -123,7 +136,8 @@ export class UserUseCase implements OnModuleInit {
 
       return {
         ...result.user,
-        status: result.user.status as unknown as UserStatus,
+        // Convert protobuf numeric enum back to GraphQL string enum
+        status: mapUserStatus(result.user.status),
       };
     } catch (error: any) {
       throwErrorFromGrpc(error);
@@ -143,8 +157,8 @@ export class UserUseCase implements OnModuleInit {
             email: request.email,
             phone: request.phone,
             avatar: request.avatar,
-            // Assuming UserStatus is compatible with the backend
-            status: request.status as any,
+            // Convert GraphQL string enum to protobuf numeric enum
+            status: mapUserStatusToProto(request.status),
             roleIds: request.roleIds || [],
           },
           userId,
@@ -164,6 +178,22 @@ export class UserUseCase implements OnModuleInit {
         this.userService.DeleteUser({
           userId: request.userId,
           deletedUserId: userId,
+        }),
+      );
+    } catch (error: any) {
+      throwErrorFromGrpc(error);
+    }
+  }
+
+  async changePassword(
+    request: ChangePasswordUserRequest,
+    userId: string,
+  ): Promise<UpdateSuccess | undefined> {
+    try {
+      return await getResultFromGrpc<UpdateSuccess>(
+        this.userService.ChangePassword({
+          password: request.password,
+          userId,
         }),
       );
     } catch (error: any) {

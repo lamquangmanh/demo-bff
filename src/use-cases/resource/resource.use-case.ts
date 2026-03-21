@@ -27,7 +27,7 @@ import {
   UpdateResourceRequest,
   DeleteResourceRequest,
 } from '@/domain/use-cases';
-import { ResourceEntity } from '@/domain/entites';
+import { ResourceEntity } from '@/domain/entities';
 
 @Injectable()
 export class ResourceUseCase implements OnModuleInit {

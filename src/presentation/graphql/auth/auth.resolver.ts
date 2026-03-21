@@ -2,7 +2,7 @@
 import { Resolver, Query, Args, Context } from '@nestjs/graphql';
 
 // import from domain/entities
-import { AuthEntity } from '@/domain/entites';
+import { AuthEntity } from '@/domain/entities';
 
 // import from use-cases
 import { AuthUseCase } from '@/use-cases/auth';

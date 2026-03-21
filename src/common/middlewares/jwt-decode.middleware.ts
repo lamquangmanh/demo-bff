@@ -15,8 +15,11 @@ export class JwtDecodeMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     // Skip JWT validation for public paths
-    const publicPaths = ['/healthz', '/health', '/metrics'];
-    if (publicPaths.includes(req.path)) {
+    const publicPaths = ['/healthz', '/health', '/metrics', '/graphql'];
+    if (
+      publicPaths.includes(req.path) ||
+      publicPaths.includes(req.originalUrl)
+    ) {
       return next();
     }
 

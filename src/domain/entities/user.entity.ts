@@ -10,8 +10,8 @@ import {
   // CreatedUserEntity,
   // UpdatedUserEntity,
   // DeletedUserEntity,
-} from '@/domain/entites/base.entity';
-import { UserRoleEntity } from '@/domain/entites/user-role.entity';
+} from '@/domain/entities/base.entity';
+import { UserRoleEntity } from '@/domain/entities/user-role.entity';
 
 @ObjectType({ description: 'User entity' })
 export class UserEntity extends BaseEntity {

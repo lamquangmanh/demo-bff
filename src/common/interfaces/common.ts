@@ -7,7 +7,7 @@ import {
   PermissionEntity,
   ModuleEntity,
   UserEntity,
-} from '@/domain/entites';
+} from '@/domain/entities';
 
 export interface PaginationResponse {
   page: number;

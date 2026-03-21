@@ -6,7 +6,7 @@ import { filter, identify } from 'lodash';
 import { UserUseCase } from '@/use-cases/user';
 
 // import from domain/entities
-import { UserEntity } from '@/domain/entites';
+import { UserEntity } from '@/domain/entities';
 
 // One instance per request
 @Injectable({ scope: Scope.REQUEST })
@@ -15,11 +15,11 @@ export class UserLoader {
   private readonly userUseCase!: UserUseCase;
 
   /**
-   * Generate a DataLoader to batch modules by resource IDs.
-   * This is useful for fetching all modules related to multiple roles in a single query.
+   * Generate a DataLoader to batch users by user IDs.
+   * This is useful for fetching all users related to multiple user IDs in a single query.
    */
   generateBatchUsersByIds() {
-    return new DataLoader<string, UserEntity>(
+    return new DataLoader<string, UserEntity | null>(
       async (ids: readonly string[]) => {
         const uniqueIds = filter(ids, identify);
         const users: UserEntity[] = await this.userUseCase.findByIds(
@@ -32,7 +32,8 @@ export class UserLoader {
         const usersMap = new Map(
           filtered.map((user: UserEntity) => [user.userId, user]),
         );
-        return ids.map((id: string) => usersMap.get(id) ?? new UserEntity());
+        // Return null instead of empty entity when user not found
+        return ids.map((id: string) => usersMap.get(id) ?? null);
       },
     );
   }

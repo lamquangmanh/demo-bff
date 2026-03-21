@@ -5,14 +5,14 @@ import { returnString } from '@/common/utils';
 
 @ObjectType({ description: 'Create user entity' })
 export class CreatedUserEntity {
-  @Field(returnString, { nullable: false, description: 'userId' })
-  userId!: string;
+  @Field(returnString, { nullable: true, description: 'userId' })
+  userId?: string;
 
-  @Field(returnString, { nullable: false, description: 'username' })
-  username!: string;
+  @Field(returnString, { nullable: true, description: 'username' })
+  username?: string;
 
-  @Field(returnString, { nullable: false, description: 'email' })
-  email!: string;
+  @Field(returnString, { nullable: true, description: 'email' })
+  email?: string;
 
   @Field(returnString, { nullable: true, description: 'avatar' })
   avatar?: string;

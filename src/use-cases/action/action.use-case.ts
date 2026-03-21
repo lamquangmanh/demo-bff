@@ -28,7 +28,7 @@ import {
   UpdateActionRequest,
   DeleteActionRequest,
 } from '@/domain/use-cases';
-import { ActionEntity } from '@/domain/entites';
+import { ActionEntity } from '@/domain/entities';
 
 @Injectable()
 export class ActionUseCase implements OnModuleInit {

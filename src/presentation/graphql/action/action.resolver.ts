@@ -2,7 +2,7 @@
 import { Resolver, Query, Args } from '@nestjs/graphql';
 
 // import from domain/entities
-import { ActionEntity, GetListArgs } from '@/domain/entites';
+import { ActionEntity, GetListArgs } from '@/domain/entities';
 
 // import from use-cases
 import { ActionUseCase } from '@/use-cases/action';

@@ -25,7 +25,7 @@ import {
   GetListArgs,
   UpdateSuccessResponse,
   DeleteSuccessResponse,
-} from '@/domain/entites';
+} from '@/domain/entities';
 
 // import from use-cases
 import { UserUseCase } from '@/use-cases/user';
@@ -36,6 +36,7 @@ import {
   DeleteUserInput,
   GetUserInput,
   UpdateUserInput,
+  ChangeUserPasswordInput,
   GetUsersResponse,
 } from './dtos';
 import { BaseResolver } from '../base.resolver';
@@ -71,6 +72,14 @@ export class UserResolver extends BaseResolver {
     @Context('user') user: UserInformation,
   ): Promise<UpdateSuccess | undefined> {
     return await this.useCase.updateUser(request as any, user?.userId);
+  }
+
+  @Mutation(() => UpdateSuccessResponse, { name: 'changePassword' })
+  async changePassword(
+    @Args() request: ChangeUserPasswordInput,
+    @Context('user') user: UserInformation,
+  ): Promise<UpdateSuccess | undefined> {
+    return await this.useCase.changePassword(request as any, user?.userId);
   }
 
   @Mutation(() => DeleteSuccessResponse, { name: 'deleteUser' })

@@ -5,7 +5,7 @@ import { Injectable, Scope, Inject } from '@nestjs/common';
 import { ModuleUseCase } from '@/use-cases/module';
 
 // import from domain/entities
-import { ModuleEntity } from '@/domain/entites';
+import { ModuleEntity } from '@/domain/entities';
 
 // One instance per request
 @Injectable({ scope: Scope.REQUEST })

@@ -28,7 +28,7 @@ import {
   UpdateModuleRequest,
   DeleteModuleRequest,
 } from '@/domain/use-cases';
-import { ModuleEntity } from '@/domain/entites';
+import { ModuleEntity } from '@/domain/entities';
 
 @Injectable()
 export class ModuleUseCase implements OnModuleInit {

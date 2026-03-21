@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 // import from domain
-import { PaginationResponse, ActionEntity } from '@/domain/entites';
+import { PaginationResponse, ActionEntity } from '@/domain/entities';
 
 @ObjectType({ description: 'Get list' })
 export class GetActionsResponse {

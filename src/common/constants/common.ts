@@ -93,6 +93,16 @@ export const FILTER_LIST_USER = [
     operator: FILTER_OPERATOR.EQUAL,
     valueField: 'stringValue',
   },
+  {
+    field: 'status',
+    operator: FILTER_OPERATOR.EQUAL,
+    valueField: 'stringValue',
+  },
+  {
+    field: 'phone',
+    operator: FILTER_OPERATOR.EQUAL,
+    valueField: 'stringValue',
+  },
 ];
 
 export const FILTER_LIST_ROLE = [

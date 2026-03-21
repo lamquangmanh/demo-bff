@@ -29,7 +29,7 @@ import {
   UpdatePermissionRequest,
   DeletePermissionRequest,
 } from '@/domain/use-cases';
-import { PermissionEntity } from '@/domain/entites';
+import { PermissionEntity } from '@/domain/entities';
 
 @Injectable()
 export class PermissionUseCase implements OnModuleInit {

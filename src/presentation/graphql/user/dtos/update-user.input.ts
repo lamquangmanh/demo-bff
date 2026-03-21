@@ -1,6 +1,5 @@
-import { Field, ArgsType } from '@nestjs/graphql';
+import { Field, ArgsType, OmitType } from '@nestjs/graphql';
 import { IsUUID } from 'class-validator';
-import { OmitType } from '@nestjs/mapped-types';
 
 // import from common
 import { returnString } from '@/common/utils';
@@ -12,7 +11,7 @@ import { CreateUserInput } from './create-user.input';
 export class UpdateUserInput extends OmitType(CreateUserInput, [
   'password',
   'email',
-]) {
+] as const) {
   @Field(returnString, { nullable: false })
   @IsUUID()
   userId!: string;

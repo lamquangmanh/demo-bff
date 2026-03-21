@@ -4,10 +4,10 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { returnString } from '@/common/utils';
 
 // import from base
-import { BaseEntity } from '@/domain/entites/base.entity';
+import { BaseEntity } from '@/domain/entities/base.entity';
 
 // import from domain
-import { ActionEntity } from '@/domain/entites/action.entity';
+import { ActionEntity } from '@/domain/entities/action.entity';
 
 @ObjectType({ description: 'Resource entity' })
 export class ResourceEntity extends BaseEntity {

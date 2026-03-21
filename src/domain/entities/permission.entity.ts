@@ -4,7 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { returnString } from '@/common/utils';
 
 // import from base
-import { BaseEntity } from '@/domain/entites/base.entity';
+import { BaseEntity } from '@/domain/entities/base.entity';
 import { ResourceEntity } from './resource.entity';
 import { ActionEntity } from './action.entity';
 

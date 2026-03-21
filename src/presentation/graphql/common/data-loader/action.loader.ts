@@ -5,7 +5,7 @@ import { Injectable, Scope, Inject } from '@nestjs/common';
 import { ActionUseCase } from '@/use-cases/action';
 
 // import from domain/entities
-import { ActionEntity } from '@/domain/entites';
+import { ActionEntity } from '@/domain/entities';
 
 // One instance per request
 @Injectable({ scope: Scope.REQUEST })
