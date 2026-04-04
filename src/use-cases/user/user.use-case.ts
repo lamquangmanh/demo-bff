@@ -149,6 +149,12 @@ export class UserUseCase implements OnModuleInit {
     userId: string,
   ): Promise<UpdateSuccess | undefined> {
     try {
+      console.log(
+        'Updating user with request:',
+        request,
+        'and userId:',
+        userId,
+      );
       return await getResultFromGrpc<UpdateSuccess>(
         this.userService.UpdateUser({
           user: {

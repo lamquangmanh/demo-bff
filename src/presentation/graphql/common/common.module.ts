@@ -15,6 +15,7 @@ import {
   PermissionLoader,
   ModuleLoader,
   UserLoader,
+  RoleLoader,
 } from './data-loader';
 
 // import from use-cases
@@ -22,6 +23,7 @@ import { ActionUseCase } from '@/use-cases/action';
 import { PermissionUseCase } from '@/use-cases/permission';
 import { ModuleUseCase } from '@/use-cases/module';
 import { UserUseCase } from '@/use-cases/user';
+import { RoleUseCase } from '@/use-cases/role';
 
 @Module({
   imports: [
@@ -53,6 +55,8 @@ import { UserUseCase } from '@/use-cases/user';
     PermissionUseCase,
     ModuleLoader,
     ModuleUseCase,
+    RoleLoader,
+    RoleUseCase,
     UserUseCase,
     UserLoader,
   ],
@@ -64,6 +68,8 @@ import { UserUseCase } from '@/use-cases/user';
     PermissionUseCase,
     ModuleLoader,
     ModuleUseCase,
+    RoleLoader,
+    RoleUseCase,
     UserUseCase,
     UserLoader,
   ],

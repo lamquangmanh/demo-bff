@@ -12,6 +12,7 @@ import {
   PermissionLoader,
   ModuleLoader,
   UserLoader,
+  RoleLoader,
 } from '@/presentation/graphql/common/data-loader';
 
 @Injectable()
@@ -21,6 +22,7 @@ export class DataLoaderInterceptor implements NestInterceptor {
     private readonly permissionLoader: PermissionLoader,
     private readonly moduleLoader: ModuleLoader,
     private readonly userLoader: UserLoader,
+    private readonly roleLoader: RoleLoader,
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler) {
@@ -40,6 +42,9 @@ export class DataLoaderInterceptor implements NestInterceptor {
       },
       userLoader: {
         batchUsersByIds: this.userLoader.generateBatchUsersByIds(),
+      },
+      roleLoader: {
+        batchRolesByIds: this.roleLoader.generateBatchRolesByIds(),
       },
     };
     return next.handle();

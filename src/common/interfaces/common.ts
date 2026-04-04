@@ -7,6 +7,8 @@ import {
   PermissionEntity,
   ModuleEntity,
   UserEntity,
+  RoleEntity,
+  UserRoleEntity,
 } from '@/domain/entities';
 
 export interface PaginationResponse {
@@ -67,6 +69,12 @@ export interface GraphQLContext {
     };
     userLoader?: {
       batchUsersByIds: DataLoader<string, UserEntity | null>;
+    };
+    roleLoader?: {
+      batchRolesByIds: DataLoader<string, RoleEntity | null>;
+    };
+    userRoleLoader?: {
+      batchRolesByUserIds: DataLoader<string, UserRoleEntity[]>;
     };
   };
   req: any; // Express request object
