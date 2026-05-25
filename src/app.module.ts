@@ -13,7 +13,7 @@ import {
   queueConnection,
   configs,
 } from './common/configs';
-import { graphqlFormatError } from './common/utils';
+import { graphqlFormatError, graphqlFormatResponse } from './common/utils';
 import { FlexibleValueScalar } from './common/scalars';
 // register the enum with GraphQL
 import './common/graphql-enum';
@@ -53,6 +53,9 @@ import { RedisModule } from './infrastructure/redis';
       autoSchemaFile: true,
       playground: false,
       formatError: graphqlFormatError,
+      // formatResponse is not part of ApolloDriverConfig typing but supported at runtime
+      // @ts-expect-error ApolloDriverConfig typing does not include formatResponse
+      formatResponse: graphqlFormatResponse,
       plugins: configs.GRAPHQL_PLAYGROUND_ENABLED
         ? [ApolloServerPluginLandingPageLocalDefault()]
         : [],

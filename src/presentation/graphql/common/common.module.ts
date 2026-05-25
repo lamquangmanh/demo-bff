@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { dirname, join } from 'path';
 
 // import from common
 import {
@@ -8,6 +8,11 @@ import {
   PROTO_PATHS,
   USER_PACKAGE_NAME,
 } from '@/common/constants';
+
+const protobufPackageRoot = dirname(
+  require.resolve('@lamquangmanh/protobuf/package.json'),
+);
+const protobufProtoDir = join(protobufPackageRoot, 'proto');
 
 // import data-loader from presentation
 import {
@@ -34,15 +39,11 @@ import { RoleUseCase } from '@/use-cases/role';
         options: {
           url: process.env.BE_GRPC_URL ?? 'localhost:5000',
           package: PACKAGE_NAMES,
-          protoPath: PROTO_PATHS,
+          protoPath: PROTO_PATHS.map((protoPath) =>
+            join(protobufProtoDir, protoPath.replace(/^proto\//, '')),
+          ),
           loader: {
-            includeDirs: [
-              join(
-                __dirname,
-                '../../../../node_modules',
-                '@lamquangmanh/protobuf/proto',
-              ),
-            ],
+            includeDirs: [protobufPackageRoot],
           },
         },
       },

@@ -11,7 +11,7 @@ import {
 import {
   UpdateSuccess,
   DeleteSuccess,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+} from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 import { UseInterceptors } from '@nestjs/common';
 
 // import from common

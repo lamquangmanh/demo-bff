@@ -5,13 +5,13 @@ import {
   ProductService,
   GetProductRequest,
   GetProductsResponse,
-  CreateSuccess,
-} from '@lamquangmanh/protobuf/dist/product/v1/product';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-  FilterOperator,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateProductResponse,
+  UpdateProductResponse,
+  DeleteProductResponse,
+  CreateProductData,
+  UpdateProductData,
+} from '@lamquangmanh/protobuf/dist/proto/product/v1/product';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_PRODUCT } from '@/common/constants';
@@ -22,12 +22,6 @@ import {
   throwErrorFromGrpc,
 } from '@/common/utils';
 
-// import from domain
-import {
-  CreateProductRequest,
-  UpdateProductRequest,
-  DeleteProductRequest,
-} from '@/domain/use-cases';
 import { ProductEntity } from '@/domain/entities';
 
 @Injectable()
@@ -49,7 +43,7 @@ export class ProductUseCase implements OnModuleInit {
             filters: [
               {
                 field: 'productId',
-                operator: FilterOperator.IN,
+                operator: FilterOperator.FILTER_OPERATOR_IN,
                 stringValues: ids,
                 boolValues: [],
                 numberValues: [],
@@ -101,15 +95,19 @@ export class ProductUseCase implements OnModuleInit {
   }
 
   async createProduct(
-    request: CreateProductRequest,
+    product: Omit<CreateProductData, 'description' | 'icon'> & {
+      description?: string;
+      icon?: string;
+    },
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreateProductResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreateProductResponse>(
         this.productService.CreateProduct({
           product: {
-            ...request,
-            description: request.description ?? '',
+            ...product,
+            description: product.description ?? '',
+            icon: product.icon ?? '',
           },
           userId,
         }),
@@ -120,15 +118,19 @@ export class ProductUseCase implements OnModuleInit {
   }
 
   async updateProduct(
-    request: UpdateProductRequest,
+    product: Omit<UpdateProductData, 'description' | 'icon'> & {
+      description?: string;
+      icon?: string;
+    },
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateProductResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateProductResponse>(
         this.productService.UpdateProduct({
           product: {
-            ...request,
-            description: request.description ?? '',
+            ...product,
+            description: product.description ?? '',
+            icon: product.icon ?? '',
           },
           userId,
         }),
@@ -139,11 +141,11 @@ export class ProductUseCase implements OnModuleInit {
   }
 
   async deleteProduct(
-    request: DeleteProductRequest,
+    request: { productId: string },
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteProductResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteProductResponse>(
         this.productService.DeleteProduct({
           productId: request.productId,
           userId,

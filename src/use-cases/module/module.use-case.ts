@@ -5,13 +5,13 @@ import {
   ModuleService,
   GetModuleRequest,
   GetModulesResponse,
-  CreateSuccess,
-} from '@lamquangmanh/protobuf/dist/module/v1/module';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-  FilterOperator,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateModuleResponse,
+  UpdateModuleResponse,
+  CreateModuleData,
+  UpdateModuleData,
+  DeleteModuleResponse,
+} from '@lamquangmanh/protobuf/dist/proto/module/v1/module';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_MODULE } from '@/common/constants';
@@ -22,12 +22,6 @@ import {
   throwErrorFromGrpc,
 } from '@/common/utils';
 
-// import from domain
-import {
-  CreateModuleRequest,
-  UpdateModuleRequest,
-  DeleteModuleRequest,
-} from '@/domain/use-cases';
 import { ModuleEntity } from '@/domain/entities';
 
 @Injectable()
@@ -47,7 +41,7 @@ export class ModuleUseCase implements OnModuleInit {
           filters: [
             {
               field: 'moduleId',
-              operator: FilterOperator.IN,
+              operator: FilterOperator.FILTER_OPERATOR_IN,
               stringValues: ids,
               boolValues: [],
               numberValues: [],
@@ -82,17 +76,17 @@ export class ModuleUseCase implements OnModuleInit {
   }
 
   async createModule(
-    request: CreateModuleRequest,
+    module: Omit<CreateModuleData, 'description'> & {
+      description?: string;
+    },
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreateModuleResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreateModuleResponse>(
         this.moduleService.CreateModule({
           module: {
-            ...request,
-            description: request.description ?? '',
-            icon: request.icon ?? '',
-            url: request.url ?? '',
+            ...module,
+            description: module.description ?? '',
           },
           userId,
         }),
@@ -103,17 +97,17 @@ export class ModuleUseCase implements OnModuleInit {
   }
 
   async updateModule(
-    request: UpdateModuleRequest,
+    module: Omit<UpdateModuleData, 'description'> & {
+      description?: string;
+    },
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateModuleResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateModuleResponse>(
         this.moduleService.UpdateModule({
           module: {
-            ...request,
-            description: request.description ?? '',
-            icon: request.icon ?? '',
-            url: request.url ?? '',
+            ...module,
+            description: module.description ?? '',
           },
           userId,
         }),
@@ -124,11 +118,11 @@ export class ModuleUseCase implements OnModuleInit {
   }
 
   async deleteModule(
-    request: DeleteModuleRequest,
+    request: { moduleId: string },
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteModuleResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteModuleResponse>(
         this.moduleService.DeleteModule({
           moduleId: request.moduleId,
           userId,

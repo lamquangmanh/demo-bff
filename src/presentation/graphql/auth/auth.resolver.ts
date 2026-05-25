@@ -1,4 +1,5 @@
 // import from libraries
+import { Logger } from '@nestjs/common';
 import { Resolver, Query, Args, Context } from '@nestjs/graphql';
 
 // import from domain/entities
@@ -20,6 +21,8 @@ import {
 
 @Resolver(() => AuthEntity)
 export class AuthResolver {
+  private readonly logger = new Logger(AuthResolver.name);
+
   constructor(private readonly useCase: AuthUseCase) {}
 
   @Query(() => LoginResponse, { name: 'login' })
@@ -29,6 +32,7 @@ export class AuthResolver {
   ): Promise<LoginResponse> {
     const result: LoginResponse | undefined = await this.useCase.login(query);
     if (!result) {
+      this.logger.error('Login failed: No response from use case');
       throw new Error('Login failed: No response from use case');
     }
 
@@ -52,12 +56,14 @@ export class AuthResolver {
   }
 
   @Query(() => GetMeResponse, { name: 'getMe' })
-  async getMe(@Context('user') user: UserInformation): Promise<GetMeResponse> {
-    console.log('getMe called with user:', user);
+  async getMe(@Context() context: any): Promise<GetMeResponse> {
+    const user: UserInformation = context.user;
+    this.logger.log('getMe called with user:', user);
     const result: GetMeResponse | undefined = await this.useCase.getMe({
       userId: user?.userId,
     } as GetMeRequest);
     if (!result) {
+      this.logger.error('GetMe failed: No response from use case');
       throw new Error('GetMe failed');
     }
     return result;

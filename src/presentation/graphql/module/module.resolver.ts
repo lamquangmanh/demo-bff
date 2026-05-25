@@ -12,7 +12,7 @@ import {
 import {
   UpdateSuccess,
   DeleteSuccess,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+} from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
 import { UserInformation } from '@/common/interfaces';

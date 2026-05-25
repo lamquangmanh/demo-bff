@@ -5,18 +5,23 @@ import { ClientGrpc } from '@nestjs/microservices';
 import {
   UserService,
   GetUserRequest,
-  // GetUsersResponse,
-  CreateSuccess,
+  CreateUserResponse,
+  UpdateUserResponse,
+  ChangePasswordRequest,
+  ChangePasswordResponse,
   UserStatus as ProtoUserStatus,
-} from '@lamquangmanh/protobuf/dist/user/v1/user';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-  FilterOperator,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateUserData,
+  UpdateUserData,
+  DeleteUserResponse,
+} from '@lamquangmanh/protobuf/dist/proto/user/v1/user';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
-import { USER_PACKAGE_NAME, FILTER_LIST_USER } from '@/common/constants';
+import {
+  USER_PACKAGE_NAME,
+  FILTER_LIST_USER,
+  UserStatus,
+} from '@/common/constants';
 import { GetListRequest } from '@/common/interfaces';
 import {
   convertFilterToBackend,
@@ -27,13 +32,7 @@ import {
 } from '@/common/utils';
 
 // import from domain
-import {
-  CreateUserRequest,
-  UpdateUserRequest,
-  DeleteUserRequest,
-  ChangePasswordUserRequest,
-  GetUsersResponse,
-} from '@/domain/use-cases';
+import { GetUsersResponse } from '@/domain/use-cases';
 import { UserEntity } from '@/domain/entities';
 
 @Injectable()
@@ -52,7 +51,7 @@ export class UserUseCase implements OnModuleInit {
         filters: [
           {
             field: 'userId',
-            operator: FilterOperator.IN,
+            operator: FilterOperator.FILTER_OPERATOR_IN,
             stringValues: ids,
             boolValues: [],
             numberValues: [],
@@ -112,11 +111,11 @@ export class UserUseCase implements OnModuleInit {
   }
 
   async createUser(
-    request: CreateUserRequest,
+    request: Omit<CreateUserData, 'status'> & { status: UserStatus },
     userId: string,
   ): Promise<UserEntity | undefined> {
     try {
-      const result = await getResultFromGrpc<CreateSuccess>(
+      const result = await getResultFromGrpc<CreateUserResponse>(
         this.userService.CreateUser({
           user: {
             username: request.username,
@@ -145,9 +144,9 @@ export class UserUseCase implements OnModuleInit {
   }
 
   async updateUser(
-    request: UpdateUserRequest,
+    request: Omit<UpdateUserData, 'status'> & { status: UserStatus },
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateUserResponse | undefined> {
     try {
       console.log(
         'Updating user with request:',
@@ -155,7 +154,7 @@ export class UserUseCase implements OnModuleInit {
         'and userId:',
         userId,
       );
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateUserResponse>(
         this.userService.UpdateUser({
           user: {
             userId: request.userId,
@@ -176,11 +175,11 @@ export class UserUseCase implements OnModuleInit {
   }
 
   async deleteUser(
-    request: DeleteUserRequest,
+    request: { userId: string },
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteUserResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteUserResponse>(
         this.userService.DeleteUser({
           userId: request.userId,
           deletedUserId: userId,
@@ -192,11 +191,11 @@ export class UserUseCase implements OnModuleInit {
   }
 
   async changePassword(
-    request: ChangePasswordUserRequest,
+    request: ChangePasswordRequest,
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<ChangePasswordResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<ChangePasswordResponse>(
         this.userService.ChangePassword({
           password: request.password,
           userId,

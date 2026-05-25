@@ -1,6 +1,5 @@
 // import from libraries
 import { Resolver, Query, Context } from '@nestjs/graphql';
-import { ApolloError } from 'apollo-server-errors';
 
 // import from common
 import { UserInformation } from '@/common/interfaces';
@@ -18,14 +17,9 @@ export class MenuResolver {
   @Query(() => GetSuperMenusResponse, { name: 'getSuperMenus' })
   async getSuperMenus(
     @Context('user') user: UserInformation,
-  ): Promise<GetSuperMenusResponse> {
-    console.log('Fetching super menus for user:', user);
+  ): Promise<GetSuperMenusResponse | undefined> {
     const result: GetSuperMenusResponse | undefined =
       await this.useCase.getSuperMenus(user.userId);
-    if (!result) {
-      throw new ApolloError('No super menus found for the user', '500', {});
-    }
-
     return result;
   }
 }

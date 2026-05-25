@@ -5,14 +5,15 @@ import {
   PermissionService,
   GetPermissionRequest,
   GetPermissionsResponse,
-  CreateSuccess,
   GetPermissionsByUserIdResponse,
-} from '@lamquangmanh/protobuf/dist/permission/v1/permission';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-  FilterOperator,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreatePermissionData,
+  CreatePermissionResponse,
+  UpdatePermissionData,
+  UpdatePermissionResponse,
+  DeletePermissionRequest,
+  DeletePermissionResponse,
+} from '@lamquangmanh/protobuf/dist/proto/permission/v1/permission';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_PERMISSION } from '@/common/constants';
@@ -23,12 +24,6 @@ import {
   throwErrorFromGrpc,
 } from '@/common/utils';
 
-// import from domain
-import {
-  CreatePermissionRequest,
-  UpdatePermissionRequest,
-  DeletePermissionRequest,
-} from '@/domain/use-cases';
 import { PermissionEntity } from '@/domain/entities';
 
 @Injectable()
@@ -49,7 +44,7 @@ export class PermissionUseCase implements OnModuleInit {
         filters: [
           {
             field: 'permissionId',
-            operator: FilterOperator.IN,
+            operator: FilterOperator.FILTER_OPERATOR_IN,
             stringValues: ids,
             boolValues: [],
             numberValues: [],
@@ -69,7 +64,7 @@ export class PermissionUseCase implements OnModuleInit {
         filters: [
           {
             field: 'roleId',
-            operator: FilterOperator.IN,
+            operator: FilterOperator.FILTER_OPERATOR_IN,
             stringValues: ids,
             boolValues: [],
             numberValues: [],
@@ -119,15 +114,13 @@ export class PermissionUseCase implements OnModuleInit {
   }
 
   async createPermission(
-    request: CreatePermissionRequest,
+    permission: CreatePermissionData,
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreatePermissionResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreatePermissionResponse>(
         this.permissionService.CreatePermission({
-          permission: {
-            ...request,
-          },
+          permission,
           userId,
         }),
       );
@@ -137,15 +130,13 @@ export class PermissionUseCase implements OnModuleInit {
   }
 
   async updatePermission(
-    request: UpdatePermissionRequest,
+    permission: UpdatePermissionData,
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdatePermissionResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdatePermissionResponse>(
         this.permissionService.UpdatePermission({
-          permission: {
-            ...request,
-          },
+          permission,
           userId,
         }),
       );
@@ -157,9 +148,9 @@ export class PermissionUseCase implements OnModuleInit {
   async deletePermission(
     request: DeletePermissionRequest,
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeletePermissionResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeletePermissionResponse>(
         this.permissionService.DeletePermission({
           permissionId: request.permissionId,
           userId,

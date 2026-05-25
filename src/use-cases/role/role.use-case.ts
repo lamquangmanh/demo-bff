@@ -5,12 +5,12 @@ import {
   RoleService,
   GetRoleRequest,
   GetRolesResponse,
-  CreateSuccess,
-} from '@lamquangmanh/protobuf/dist/role/v1/role';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateRoleResponse,
+  UpdateRoleResponse,
+  DeleteRoleResponse,
+  CreateRoleData,
+  UpdateRoleData,
+} from '@lamquangmanh/protobuf/dist/proto/role/v1/role';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_ROLE } from '@/common/constants';
@@ -21,12 +21,6 @@ import {
   throwErrorFromGrpc,
 } from '@/common/utils';
 
-// import from domain
-import {
-  CreateRoleRequest,
-  UpdateRoleRequest,
-  DeleteRoleRequest,
-} from '@/domain/use-cases';
 import { RoleEntity } from '@/domain/entities';
 
 @Injectable()
@@ -61,17 +55,17 @@ export class RoleUseCase implements OnModuleInit {
   }
 
   async createRole(
-    request: CreateRoleRequest,
+    role: CreateRoleData,
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreateRoleResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreateRoleResponse>(
         this.roleService.CreateRole({
           role: {
-            name: request.name,
-            description: request.description ?? '',
-            moduleId: request.moduleId,
-            permissions: request.permissions,
+            name: role.name,
+            description: role.description ?? '',
+            moduleId: role.moduleId,
+            permissions: role.permissions,
           },
           userId,
         }),
@@ -82,18 +76,18 @@ export class RoleUseCase implements OnModuleInit {
   }
 
   async updateRole(
-    request: UpdateRoleRequest,
+    role: UpdateRoleData,
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateRoleResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateRoleResponse>(
         this.roleService.UpdateRole({
           role: {
-            roleId: request.roleId,
-            name: request.name,
-            description: request.description ?? '',
-            moduleId: request.moduleId,
-            permissions: request.permissions,
+            roleId: role.roleId,
+            name: role.name,
+            description: role.description ?? '',
+            moduleId: role.moduleId,
+            permissions: role.permissions,
           },
           userId,
         }),
@@ -104,11 +98,11 @@ export class RoleUseCase implements OnModuleInit {
   }
 
   async deleteRole(
-    request: DeleteRoleRequest,
+    request: { roleId: string },
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteRoleResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteRoleResponse>(
         this.roleService.DeleteRole({
           roleId: request.roleId,
           userId,
