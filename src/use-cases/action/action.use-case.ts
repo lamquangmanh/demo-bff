@@ -5,13 +5,14 @@ import {
   ActionService,
   GetActionRequest,
   GetActionsResponse,
-  CreateSuccess,
-} from '@lamquangmanh/protobuf/dist/action/v1/action';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-  FilterOperator,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateActionData,
+  UpdateActionData,
+  CreateActionResponse,
+  UpdateActionResponse,
+  DeleteActionRequest,
+  DeleteActionResponse,
+} from '@lamquangmanh/protobuf/dist/proto/action/v1/action';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_ACTION } from '@/common/constants';
@@ -22,12 +23,6 @@ import {
   throwErrorFromGrpc,
 } from '@/common/utils';
 
-// import from domain
-import {
-  CreateActionRequest,
-  UpdateActionRequest,
-  DeleteActionRequest,
-} from '@/domain/use-cases';
 import { ActionEntity } from '@/domain/entities';
 
 @Injectable()
@@ -47,7 +42,7 @@ export class ActionUseCase implements OnModuleInit {
         filters: [
           {
             field: 'actionId',
-            operator: FilterOperator.IN,
+            operator: FilterOperator.FILTER_OPERATOR_IN,
             stringValues: ids,
             boolValues: [],
             numberValues: [],
@@ -67,7 +62,7 @@ export class ActionUseCase implements OnModuleInit {
         filters: [
           {
             field: 'resourceId',
-            operator: FilterOperator.IN,
+            operator: FilterOperator.FILTER_OPERATOR_IN,
             stringValues: ids,
             boolValues: [],
             numberValues: [],
@@ -103,20 +98,13 @@ export class ActionUseCase implements OnModuleInit {
   }
 
   async createAction(
-    request: CreateActionRequest,
+    action: CreateActionData,
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreateActionResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreateActionResponse>(
         this.actionService.CreateAction({
-          action: {
-            name: request.name,
-            description: request.description,
-            resourceId: request.resourceId,
-            requestType: request.requestType,
-            method: request.method,
-            url: request.url,
-          },
+          action,
           userId,
         }),
       );
@@ -126,21 +114,13 @@ export class ActionUseCase implements OnModuleInit {
   }
 
   async updateAction(
-    request: UpdateActionRequest,
+    action: UpdateActionData,
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateActionResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateActionResponse>(
         this.actionService.UpdateAction({
-          action: {
-            actionId: request.actionId,
-            name: request.name,
-            description: request.description,
-            resourceId: request.resourceId,
-            requestType: request.requestType,
-            method: request.method,
-            url: request.url,
-          },
+          action,
           userId,
         }),
       );
@@ -152,9 +132,9 @@ export class ActionUseCase implements OnModuleInit {
   async deleteAction(
     request: DeleteActionRequest,
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteActionResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteActionResponse>(
         this.actionService.DeleteAction({
           actionId: request.actionId,
           userId,

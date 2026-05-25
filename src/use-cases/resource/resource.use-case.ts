@@ -5,12 +5,12 @@ import {
   ResourceService,
   GetResourceRequest,
   GetResourcesResponse,
-  CreateSuccess,
-} from '@lamquangmanh/protobuf/dist/resource/v1/resource';
-import {
-  UpdateSuccess,
-  DeleteSuccess,
-} from '@lamquangmanh/protobuf/dist/base/v1/base';
+  CreateResourceResponse,
+  UpdateResourceResponse,
+  DeleteResourceResponse,
+  CreateResourceData,
+  UpdateResourceData,
+} from '@lamquangmanh/protobuf/dist/proto/resource/v1/resource';
 
 // import from common
 import { USER_PACKAGE_NAME, FILTER_LIST_RESOURCE } from '@/common/constants';
@@ -20,13 +20,6 @@ import {
   getResultFromGrpc,
   throwErrorFromGrpc,
 } from '@/common/utils';
-
-// import from domain
-import {
-  CreateResourceRequest,
-  UpdateResourceRequest,
-  DeleteResourceRequest,
-} from '@/domain/use-cases';
 import { ResourceEntity } from '@/domain/entities';
 
 @Injectable()
@@ -62,17 +55,13 @@ export class ResourceUseCase implements OnModuleInit {
   }
 
   async createResource(
-    request: CreateResourceRequest,
+    resource: CreateResourceData,
     userId: string,
-  ): Promise<CreateSuccess | undefined> {
+  ): Promise<CreateResourceResponse | undefined> {
     try {
-      return await getResultFromGrpc<CreateSuccess>(
+      return await getResultFromGrpc<CreateResourceResponse>(
         this.resourceService.CreateResource({
-          resource: {
-            name: request.name,
-            moduleId: request.moduleId,
-            actions: request.actions,
-          },
+          resource,
           userId,
         }),
       );
@@ -82,18 +71,13 @@ export class ResourceUseCase implements OnModuleInit {
   }
 
   async updateResource(
-    request: UpdateResourceRequest,
+    resource: UpdateResourceData,
     userId: string,
-  ): Promise<UpdateSuccess | undefined> {
+  ): Promise<UpdateResourceResponse | undefined> {
     try {
-      return await getResultFromGrpc<UpdateSuccess>(
+      return await getResultFromGrpc<UpdateResourceResponse>(
         this.resourceService.UpdateResource({
-          resource: {
-            resourceId: request.resourceId,
-            name: request.name,
-            moduleId: request.moduleId,
-            actions: request.actions,
-          },
+          resource,
           userId,
         }),
       );
@@ -103,11 +87,11 @@ export class ResourceUseCase implements OnModuleInit {
   }
 
   async deleteResource(
-    request: DeleteResourceRequest,
+    request: { resourceId: string },
     userId: string,
-  ): Promise<DeleteSuccess | undefined> {
+  ): Promise<DeleteResourceResponse | undefined> {
     try {
-      return await getResultFromGrpc<DeleteSuccess>(
+      return await getResultFromGrpc<DeleteResourceResponse>(
         this.resourceService.DeleteResource({
           resourceId: request.resourceId,
           userId,

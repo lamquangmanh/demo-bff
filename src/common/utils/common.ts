@@ -129,14 +129,54 @@ export const getResultFromGrpc = async <T>(query: any): Promise<T> => {
 export const graphqlFormatError = (
   formattedError: GraphQLFormattedError,
 ): any => {
-  console.error('GraphQL Error:', formattedError);
+  // console.error('GraphQL Error: ', formattedError);
   const extensions = formattedError?.extensions;
 
   return {
-    message: formattedError?.message ?? 'Internal server error',
-    code: extensions?.code ?? 'INTERNAL_SERVER_ERROR',
-    extra: extensions?.extra ?? {},
+    message: extensions?.message ?? 'Error',
+    code: extensions?.code ?? 'ERROR',
+    extra: (extensions?.extra as any)?.errors ?? [],
+    // preserve any nested grpc errors array so formatResponse can unpack it
+    errors: extensions?.errors ?? undefined,
   } as any;
+  // return (extensions?.extra as any)?.errors ?? [];
+};
+
+/**
+ * Format the full GraphQL response. If any formatted errors include an
+ * `errors` array (from gRPC), replace the top-level `errors` array with the
+ * concatenation of those gRPC error entries. This produces the shape:
+ * { data: { ... }, errors: [ ...grpcErrors ] }
+ */
+export const graphqlFormatResponse = (response: any): any => {
+  try {
+    if (
+      !response ||
+      !Array.isArray(response.errors) ||
+      response.errors.length === 0
+    ) {
+      return response;
+    }
+
+    // Collect all nested gRPC errors from formatted errors
+    const collected: any[] = [];
+    for (const err of response.errors) {
+      if (err?.extensions?.errors && Array.isArray(err.extensions.errors)) {
+        collected.push(...err.extensions.errors);
+      } else if (err?.errors && Array.isArray(err.errors)) {
+        // also support graphqlFormatError which attaches `errors` at top-level
+        collected.push(...err.errors);
+      }
+    }
+
+    if (collected.length > 0) {
+      // Replace response.errors with the raw gRPC errors array
+      response.errors = collected;
+    }
+  } catch (e) {
+    console.error('Error in graphqlFormatResponse:', e);
+  }
+  return response;
 };
 
 /**
@@ -145,8 +185,6 @@ export const graphqlFormatError = (
  * @returns
  */
 export const throwErrorFromGrpc = (error: any): any => {
-  console.error('gRPC Error:', error);
-
   // Try to parse error details as JSON, fallback to plain text
   let errorData: any = {};
   try {
@@ -161,6 +199,6 @@ export const throwErrorFromGrpc = (error: any): any => {
   }
 
   throw new ApolloError(errorData.message, errorData.code, {
-    extra: errorData.extra,
+    extra: errorData,
   });
 };

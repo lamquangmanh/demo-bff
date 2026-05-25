@@ -1,4 +1,4 @@
-import { ActionRequestType } from '@lamquangmanh/protobuf/dist/action/v1/action';
+import { ActionRequestType } from '@lamquangmanh/protobuf/dist/proto/action/v1/action';
 
 export interface CreateActionRequest {
   resourceId: string;
