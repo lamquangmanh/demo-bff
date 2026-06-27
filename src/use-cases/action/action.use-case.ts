@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
@@ -27,6 +27,7 @@ import { ActionEntity } from '@/domain/entities';
 
 @Injectable()
 export class ActionUseCase implements OnModuleInit {
+  private readonly logger = new Logger(ActionUseCase.name);
   private actionService!: ActionService;
 
   @Inject(USER_PACKAGE_NAME)
@@ -36,65 +37,89 @@ export class ActionUseCase implements OnModuleInit {
     this.actionService = this.client.getService<ActionService>('ActionService');
   }
 
-  async findByIds(ids: string[]): Promise<ActionEntity[]> {
-    const result = await getResultFromGrpc<GetActionsResponse>(
-      this.actionService.GetActions({
-        filters: [
-          {
-            field: 'actionId',
-            operator: FilterOperator.FILTER_OPERATOR_IN,
-            stringValues: ids,
-            boolValues: [],
-            numberValues: [],
-          },
-        ],
-        pagination: { page: 1, limit: ids.length },
-        sorts: [],
-      }),
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (result?.data as any[]) ?? [];
+  async findByIds(ids: string[]): Promise<ActionEntity[] | undefined> {
+    try {
+      const result = await getResultFromGrpc<GetActionsResponse>(
+        this.actionService.GetActions({
+          filters: [
+            {
+              field: 'actionId',
+              operator: FilterOperator.FILTER_OPERATOR_IN,
+              stringValues: ids,
+              boolValues: [],
+              numberValues: [],
+            },
+          ],
+          pagination: { page: 1, limit: ids.length },
+          sorts: [],
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return (result?.data as any[]) ?? [];
+    } catch (error: any) {
+      this.logger.error(`Error in findByIds: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async findByResourceIds(ids: string[]): Promise<ActionEntity[]> {
-    const result = await getResultFromGrpc<GetActionsResponse>(
-      this.actionService.GetActions({
-        filters: [
-          {
-            field: 'resourceId',
-            operator: FilterOperator.FILTER_OPERATOR_IN,
-            stringValues: ids,
-            boolValues: [],
-            numberValues: [],
-          },
-        ],
-        pagination: { page: 1, limit: 1000 },
-        sorts: [],
-      }),
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (result?.data as any[]) ?? [];
+  async findByResourceIds(ids: string[]): Promise<ActionEntity[] | undefined> {
+    try {
+      const result = await getResultFromGrpc<GetActionsResponse>(
+        this.actionService.GetActions({
+          filters: [
+            {
+              field: 'resourceId',
+              operator: FilterOperator.FILTER_OPERATOR_IN,
+              stringValues: ids,
+              boolValues: [],
+              numberValues: [],
+            },
+          ],
+          pagination: { page: 1, limit: 1000 },
+          sorts: [],
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return (result?.data as any[]) ?? [];
+    } catch (error: any) {
+      this.logger.error(`Error in findByResourceIds: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async getAction(request: GetActionRequest): Promise<ActionEntity> {
-    return await getResultFromGrpc<ActionEntity>(
-      this.actionService.GetAction(request),
-    );
+  async getAction(
+    request: GetActionRequest,
+  ): Promise<ActionEntity | undefined> {
+    try {
+      return await getResultFromGrpc<ActionEntity>(
+        this.actionService.GetAction(request),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getAction: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async getActions(request: GetListRequest): Promise<GetActionsResponse> {
-    const filters: any = convertFilterToBackend(
-      request.filters,
-      FILTER_LIST_ACTION,
-    );
+  async getActions(
+    request: GetListRequest,
+  ): Promise<GetActionsResponse | undefined> {
+    try {
+      const filters: any = convertFilterToBackend(
+        request.filters,
+        FILTER_LIST_ACTION,
+      );
 
-    return await getResultFromGrpc<GetActionsResponse>(
-      this.actionService.GetActions({
-        filters,
-        pagination: request.pagination,
-        sorts: request.sorts,
-      }),
-    );
+      return await getResultFromGrpc<GetActionsResponse>(
+        this.actionService.GetActions({
+          filters,
+          pagination: request.pagination,
+          sorts: request.sorts,
+        }),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getActions: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async createAction(
@@ -109,6 +134,7 @@ export class ActionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createAction: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -125,6 +151,7 @@ export class ActionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updateAction: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -141,6 +168,7 @@ export class ActionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deleteAction: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }

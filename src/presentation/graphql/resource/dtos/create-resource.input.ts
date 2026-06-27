@@ -1,5 +1,5 @@
 import { Field, ArgsType } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, IsArray } from 'class-validator';
 
 // import from common
 import { returnString } from '@/common/utils';
@@ -19,5 +19,6 @@ export class CreateResourceInput {
   moduleId!: string;
 
   @Field(() => [ActionInput], { nullable: false })
+  @IsArray()
   actions!: ActionInput[];
 }

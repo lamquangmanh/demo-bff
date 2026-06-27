@@ -58,14 +58,14 @@ export class ResourceResolver extends BaseResolver {
   @Query(() => GetResourcesResponse, { name: 'resources' })
   async getResources(
     @Args() query: GetListArgs,
-  ): Promise<GetResourcesResponse> {
+  ): Promise<GetResourcesResponse | undefined> {
     return await this.useCase.getResources(query);
   }
 
   @Query(() => ResourceEntity, { name: 'resource' })
   async getResource(
     @Args() request: GetResourceInput,
-  ): Promise<ResourceEntity> {
+  ): Promise<ResourceEntity | undefined> {
     return await this.useCase.getResource(request);
   }
 
@@ -74,6 +74,7 @@ export class ResourceResolver extends BaseResolver {
     @Args() request: CreateResourceInput,
     @Context('user') user: UserInformation,
   ): Promise<ResourceEntity | undefined> {
+    console.log('createResource request', request);
     const result = await this.useCase.createResource(
       request as any,
       user?.userId,
@@ -120,7 +121,9 @@ export class ResourceResolver extends BaseResolver {
   }
 
   @ResolveField(() => ModuleEntity, { name: 'module' })
-  async module(@Parent() resource: ResourceEntity): Promise<ModuleEntity> {
+  async module(
+    @Parent() resource: ResourceEntity,
+  ): Promise<ModuleEntity | undefined> {
     return await this.moduleUseCase.getModule({ moduleId: resource.moduleId });
   }
 }

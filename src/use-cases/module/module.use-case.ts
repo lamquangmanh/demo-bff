@@ -1,9 +1,10 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
   ModuleService,
   GetModuleRequest,
+  GetModuleResponse,
   GetModulesResponse,
   CreateModuleResponse,
   UpdateModuleResponse,
@@ -26,6 +27,7 @@ import { ModuleEntity } from '@/domain/entities';
 
 @Injectable()
 export class ModuleUseCase implements OnModuleInit {
+  private readonly logger = new Logger(ModuleUseCase.name);
   private moduleService!: ModuleService;
 
   constructor(@Inject(USER_PACKAGE_NAME) private client: ClientGrpc) {}
@@ -34,45 +36,66 @@ export class ModuleUseCase implements OnModuleInit {
     this.moduleService = this.client.getService<ModuleService>('ModuleService');
   }
 
-  async findByIds(ids: string[]): Promise<ModuleEntity[]> {
-    const result: GetModulesResponse =
-      await getResultFromGrpc<GetModulesResponse>(
+  async findByIds(ids: string[]): Promise<ModuleEntity[] | undefined> {
+    try {
+      const result: GetModulesResponse =
+        await getResultFromGrpc<GetModulesResponse>(
+          this.moduleService.GetModules({
+            filters: [
+              {
+                field: 'moduleId',
+                operator: FilterOperator.FILTER_OPERATOR_IN,
+                stringValues: ids,
+                boolValues: [],
+                numberValues: [],
+              },
+            ],
+            pagination: { page: 1, limit: ids.length },
+            sorts: [],
+          }),
+        );
+      return result?.data ?? [];
+    } catch (error: any) {
+      this.logger.error(`Error in findByIds: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
+  }
+
+  async getModule(
+    request: GetModuleRequest,
+  ): Promise<ModuleEntity | undefined> {
+    try {
+      const result = await getResultFromGrpc<GetModuleResponse>(
+        this.moduleService.GetModule(request),
+      );
+      return result?.module;
+    } catch (error: any) {
+      this.logger.error(`Error in getModule: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
+  }
+
+  async getModules(
+    request: GetListRequest,
+  ): Promise<GetModulesResponse | undefined> {
+    try {
+      const filters: any = convertFilterToBackend(
+        request.filters,
+        FILTER_LIST_MODULE,
+      );
+
+      const result = await getResultFromGrpc<GetModulesResponse>(
         this.moduleService.GetModules({
-          filters: [
-            {
-              field: 'moduleId',
-              operator: FilterOperator.FILTER_OPERATOR_IN,
-              stringValues: ids,
-              boolValues: [],
-              numberValues: [],
-            },
-          ],
-          pagination: { page: 1, limit: ids.length },
-          sorts: [],
+          filters,
+          pagination: request.pagination,
+          sorts: request.sorts,
         }),
       );
-    return result?.data ?? [];
-  }
-
-  async getModule(request: GetModuleRequest): Promise<ModuleEntity> {
-    return await getResultFromGrpc<ModuleEntity>(
-      this.moduleService.GetModule(request),
-    );
-  }
-
-  async getModules(request: GetListRequest): Promise<GetModulesResponse> {
-    const filters: any = convertFilterToBackend(
-      request.filters,
-      FILTER_LIST_MODULE,
-    );
-
-    return await getResultFromGrpc<GetModulesResponse>(
-      this.moduleService.GetModules({
-        filters,
-        pagination: request.pagination,
-        sorts: request.sorts,
-      }),
-    );
+      return result;
+    } catch (error: any) {
+      this.logger.error(`Error in getModules: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async createModule(
@@ -92,6 +115,7 @@ export class ModuleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createModule: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -113,6 +137,7 @@ export class ModuleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updateModule: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -129,6 +154,7 @@ export class ModuleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deleteModule: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }

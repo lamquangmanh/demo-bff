@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
@@ -25,6 +25,7 @@ import { RoleEntity } from '@/domain/entities';
 
 @Injectable()
 export class RoleUseCase implements OnModuleInit {
+  private readonly logger = new Logger(RoleUseCase.name);
   private roleService!: RoleService;
 
   constructor(@Inject(USER_PACKAGE_NAME) private client: ClientGrpc) {}
@@ -33,25 +34,37 @@ export class RoleUseCase implements OnModuleInit {
     this.roleService = this.client.getService<RoleService>('RoleService');
   }
 
-  async getRole(request: GetRoleRequest): Promise<RoleEntity> {
-    return await getResultFromGrpc<RoleEntity>(
-      this.roleService.GetRole(request),
-    );
+  async getRole(request: GetRoleRequest): Promise<RoleEntity | undefined> {
+    try {
+      return await getResultFromGrpc<RoleEntity>(
+        this.roleService.GetRole(request),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getRole: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async getRoles(request: GetListRequest): Promise<GetRolesResponse> {
-    const filters: any = convertFilterToBackend(
-      request.filters,
-      FILTER_LIST_ROLE,
-    );
+  async getRoles(
+    request: GetListRequest,
+  ): Promise<GetRolesResponse | undefined> {
+    try {
+      const filters: any = convertFilterToBackend(
+        request.filters,
+        FILTER_LIST_ROLE,
+      );
 
-    return await getResultFromGrpc<GetRolesResponse>(
-      this.roleService.GetRoles({
-        filters,
-        pagination: request.pagination,
-        sorts: request.sorts,
-      }),
-    );
+      return await getResultFromGrpc<GetRolesResponse>(
+        this.roleService.GetRoles({
+          filters,
+          pagination: request.pagination,
+          sorts: request.sorts,
+        }),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getRoles: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async createRole(
@@ -71,6 +84,7 @@ export class RoleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createRole: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -93,6 +107,7 @@ export class RoleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updateRole: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -109,6 +124,7 @@ export class RoleUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deleteRole: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }

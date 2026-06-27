@@ -20,9 +20,9 @@ export class ModuleLoader {
   generateBatchModulesByIds() {
     return new DataLoader<string, ModuleEntity>(
       async (ids: readonly string[]) => {
-        const modules: ModuleEntity[] = await this.moduleUseCase.findByIds(
-          ids as string[],
-        );
+        let modules: ModuleEntity[] | undefined =
+          await this.moduleUseCase.findByIds(ids as string[]);
+        if (!modules) modules = [];
         const filtered: ModuleEntity[] = modules.filter(
           (module: ModuleEntity | null | undefined) =>
             module !== null && module !== undefined,

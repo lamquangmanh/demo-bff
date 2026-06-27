@@ -22,9 +22,10 @@ export class UserLoader {
     return new DataLoader<string, UserEntity | null>(
       async (ids: readonly string[]) => {
         const uniqueIds = filter(ids, identify);
-        const users: UserEntity[] = await this.userUseCase.findByIds(
+        let users: UserEntity[] | undefined = await this.userUseCase.findByIds(
           uniqueIds as string[],
         );
+        if (!users) users = [];
         const filtered: UserEntity[] = users.filter(
           (user: UserEntity | null | undefined) =>
             user !== null && user !== undefined,

@@ -21,11 +21,10 @@ export class ActionLoader {
     return new DataLoader<string, ActionEntity[]>(
       // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
       async (actionIds: readonly string[]): Promise<(ActionEntity | any)[]> => {
-        const actions = await this.actionUseCase.findByIds(
-          actionIds as string[],
-        );
+        let actions = await this.actionUseCase.findByIds(actionIds as string[]);
+        if (!actions) actions = [];
         const actionsMap = new Map(
-          actions.map((action) => [action.actionId, action]),
+          actions?.map((action) => [action.actionId, action]),
         );
         return actionIds.map((id) => actionsMap.get(id));
       },
@@ -38,12 +37,13 @@ export class ActionLoader {
    */
   generateBatchActionsByResourceIds() {
     return new DataLoader<string, ActionEntity[]>(
-      async (resourceIds: readonly string[]) => {
-        const actions = await this.actionUseCase.findByResourceIds(
+      async (resourceIds: readonly string[]): Promise<ActionEntity[][]> => {
+        let actions = await this.actionUseCase.findByResourceIds(
           resourceIds as string[],
         );
+        if (!actions) actions = [];
         const grouped = resourceIds.map((id) =>
-          actions.filter((action) => action.resourceId === id),
+          actions?.filter((action) => action.resourceId === id),
         );
         return grouped;
       },

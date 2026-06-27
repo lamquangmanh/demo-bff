@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
@@ -28,6 +28,7 @@ import { PermissionEntity } from '@/domain/entities';
 
 @Injectable()
 export class PermissionUseCase implements OnModuleInit {
+  private readonly logger = new Logger(PermissionUseCase.name);
   private permissionService!: PermissionService;
 
   @Inject(USER_PACKAGE_NAME)
@@ -38,79 +39,107 @@ export class PermissionUseCase implements OnModuleInit {
       this.client.getService<PermissionService>('PermissionService');
   }
 
-  async findByIds(ids: string[]): Promise<PermissionEntity[]> {
-    const result = await getResultFromGrpc<GetPermissionsResponse>(
-      this.permissionService.GetPermissions({
-        filters: [
-          {
-            field: 'permissionId',
-            operator: FilterOperator.FILTER_OPERATOR_IN,
-            stringValues: ids,
-            boolValues: [],
-            numberValues: [],
-          },
-        ],
-        pagination: { page: 1, limit: ids.length },
-        sorts: [],
-      }),
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (result?.data as any[]) ?? [];
+  async findByIds(ids: string[]): Promise<PermissionEntity[] | undefined> {
+    try {
+      const result = await getResultFromGrpc<GetPermissionsResponse>(
+        this.permissionService.GetPermissions({
+          filters: [
+            {
+              field: 'permissionId',
+              operator: FilterOperator.FILTER_OPERATOR_IN,
+              stringValues: ids,
+              boolValues: [],
+              numberValues: [],
+            },
+          ],
+          pagination: { page: 1, limit: ids.length },
+          sorts: [],
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return (result?.data as any[]) ?? [];
+    } catch (error: any) {
+      this.logger.error(`Error in findByIds: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async findByRoleIds(ids: string[]): Promise<PermissionEntity[]> {
-    const result = await getResultFromGrpc<GetPermissionsResponse>(
-      this.permissionService.GetPermissions({
-        filters: [
-          {
-            field: 'roleId',
-            operator: FilterOperator.FILTER_OPERATOR_IN,
-            stringValues: ids,
-            boolValues: [],
-            numberValues: [],
-          },
-        ],
-        pagination: { page: 1, limit: 1000 },
-        sorts: [],
-      }),
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return (result?.data as any[]) ?? [];
+  async findByRoleIds(ids: string[]): Promise<PermissionEntity[] | undefined> {
+    try {
+      const result = await getResultFromGrpc<GetPermissionsResponse>(
+        this.permissionService.GetPermissions({
+          filters: [
+            {
+              field: 'roleId',
+              operator: FilterOperator.FILTER_OPERATOR_IN,
+              stringValues: ids,
+              boolValues: [],
+              numberValues: [],
+            },
+          ],
+          pagination: { page: 1, limit: 1000 },
+          sorts: [],
+        }),
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return (result?.data as any[]) ?? [];
+    } catch (error: any) {
+      this.logger.error(`Error in findByRoleIds: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async getPermissionsByUser(
     userId: string,
-  ): Promise<GetPermissionsByUserIdResponse> {
-    return await getResultFromGrpc<GetPermissionsByUserIdResponse>(
-      this.permissionService.GetPermissionsByUserId({
-        userId,
-      }),
-    );
+  ): Promise<GetPermissionsByUserIdResponse | undefined> {
+    try {
+      return await getResultFromGrpc<GetPermissionsByUserIdResponse>(
+        this.permissionService.GetPermissionsByUserId({
+          userId,
+        }),
+      );
+    } catch (error: any) {
+      this.logger.error(
+        `Error in getPermissionsByUser: ${error.message}`,
+        error,
+      );
+      throwErrorFromGrpc(error);
+    }
   }
 
   async getPermission(
     request: GetPermissionRequest,
-  ): Promise<PermissionEntity> {
-    return await getResultFromGrpc<PermissionEntity>(
-      this.permissionService.GetPermission(request),
-    );
+  ): Promise<PermissionEntity | undefined> {
+    try {
+      return await getResultFromGrpc<PermissionEntity>(
+        this.permissionService.GetPermission(request),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getPermission: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async getPermissions(
     request: GetListRequest,
-  ): Promise<GetPermissionsResponse> {
-    const filters: any = convertFilterToBackend(
-      request.filters,
-      FILTER_LIST_PERMISSION,
-    );
+  ): Promise<GetPermissionsResponse | undefined> {
+    try {
+      const filters: any = convertFilterToBackend(
+        request.filters,
+        FILTER_LIST_PERMISSION,
+      );
 
-    return await getResultFromGrpc<GetPermissionsResponse>(
-      this.permissionService.GetPermissions({
-        filters,
-        pagination: request.pagination,
-        sorts: request.sorts,
-      }),
-    );
+      return await getResultFromGrpc<GetPermissionsResponse>(
+        this.permissionService.GetPermissions({
+          filters,
+          pagination: request.pagination,
+          sorts: request.sorts,
+        }),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getPermissions: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async createPermission(
@@ -125,6 +154,7 @@ export class PermissionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createPermission: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -141,6 +171,7 @@ export class PermissionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updatePermission: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -157,6 +188,7 @@ export class PermissionUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deletePermission: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }

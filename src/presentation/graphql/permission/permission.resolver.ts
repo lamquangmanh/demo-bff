@@ -1,6 +1,5 @@
 // import from libraries
 import { Resolver, Query, Context } from '@nestjs/graphql';
-import { ApolloError } from 'apollo-server-errors';
 
 // import from common
 import { UserInformation } from '@/common/interfaces';
@@ -18,13 +17,7 @@ export class PermissionResolver {
   @Query(() => GetPermissionsByUserResponse, { name: 'getPermissionsByUser' })
   async getPermissionsByUser(
     @Context('user') user: UserInformation,
-  ): Promise<GetPermissionsByUserResponse> {
-    const result: GetPermissionsByUserResponse | undefined =
-      await this.useCase.getPermissionsByUser(user.userId);
-    if (!result) {
-      throw new ApolloError('No super menus found for the user', '500', {});
-    }
-
-    return result;
+  ): Promise<GetPermissionsByUserResponse | undefined> {
+    return await this.useCase.getPermissionsByUser(user.userId);
   }
 }

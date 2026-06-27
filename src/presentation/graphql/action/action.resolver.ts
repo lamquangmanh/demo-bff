@@ -21,7 +21,9 @@ export class ActionResolver {
   }
 
   @Query(() => ActionEntity, { name: 'action' })
-  async getAction(@Args() request: GetActionInput): Promise<ActionEntity> {
+  async getAction(
+    @Args() request: GetActionInput,
+  ): Promise<ActionEntity | undefined> {
     return await this.useCase.getAction(request);
   }
 }

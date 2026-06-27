@@ -46,8 +46,7 @@ export class ProductResolver extends BaseResolver {
   async getProducts(
     @Args() query: GetListArgs,
   ): Promise<GetProductsResponse | undefined> {
-    const data = await this.useCase.getProducts(query);
-    return data;
+    return await this.useCase.getProducts(query);
   }
 
   @Query(() => ProductEntity, { name: 'product' })

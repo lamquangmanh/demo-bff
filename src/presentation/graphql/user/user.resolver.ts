@@ -50,12 +50,16 @@ export class UserResolver extends BaseResolver {
   }
 
   @Query(() => GetUsersResponse, { name: 'users' })
-  async getUsers(@Args() query: GetListArgs): Promise<GetUsersResponse> {
+  async getUsers(
+    @Args() query: GetListArgs,
+  ): Promise<GetUsersResponse | undefined> {
     return await this.useCase.getUsers(query);
   }
 
   @Query(() => UserEntity, { name: 'user' })
-  async getUser(@Args() request: GetUserInput): Promise<UserEntity> {
+  async getUser(
+    @Args() request: GetUserInput,
+  ): Promise<UserEntity | undefined> {
     return await this.useCase.getUser(request);
   }
 

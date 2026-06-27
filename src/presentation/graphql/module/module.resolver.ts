@@ -54,12 +54,16 @@ export class ModuleResolver extends BaseResolver {
   }
 
   @Query(() => GetModulesResponse, { name: 'modules' })
-  async getModules(@Args() query: GetListArgs): Promise<GetModulesResponse> {
+  async getModules(
+    @Args() query: GetListArgs,
+  ): Promise<GetModulesResponse | undefined> {
     return await this.useCase.getModules(query);
   }
 
   @Query(() => ModuleEntity, { name: 'module' })
-  async getModule(@Args() request: GetModuleInput): Promise<ModuleEntity> {
+  async getModule(
+    @Args() request: GetModuleInput,
+  ): Promise<ModuleEntity | undefined> {
     return await this.useCase.getModule(request);
   }
 

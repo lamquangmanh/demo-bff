@@ -1,13 +1,14 @@
 import { lastValueFrom } from 'rxjs';
 import { GraphQLFormattedError } from 'graphql';
 import { ApolloError } from 'apollo-server-errors';
+import { FilterOperator } from '@lamquangmanh/protobuf/dist/proto/base/v1/base';
 
 // import from common
-import { FILTER_OPERATOR } from '../constants';
+// import { FILTER_OPERATOR } from '../constants';
 
 interface FilterResult {
   field: string;
-  operator: string;
+  operator: string | number;
   stringValue?: string;
   numberValue?: number;
   boolValue?: boolean;
@@ -21,7 +22,7 @@ interface FilterInput {
 }
 interface FilterMapping {
   field: string;
-  operator: string;
+  operator: string | number;
   valueField: string;
 }
 
@@ -56,16 +57,16 @@ export const convertFilterToBackend = (
 
     // set value based on operator
     switch (mapping.operator) {
-      case FILTER_OPERATOR.EQUAL:
-      case FILTER_OPERATOR.NOT_EQUAL:
-      case FILTER_OPERATOR.GREATER_THAN:
-      case FILTER_OPERATOR.LESS_THAN:
-      case FILTER_OPERATOR.GREATER_THAN_OR_EQUAL:
-      case FILTER_OPERATOR.LESS_THAN_OR_EQUAL:
-      case FILTER_OPERATOR.LIKE:
+      case FilterOperator.FILTER_OPERATOR_EQUAL:
+      case FilterOperator.FILTER_OPERATOR_NOT_EQUAL:
+      case FilterOperator.FILTER_OPERATOR_GREATER_THAN:
+      case FilterOperator.FILTER_OPERATOR_LESS_THAN:
+      case FilterOperator.FILTER_OPERATOR_GREATER_THAN_OR_EQUAL:
+      case FilterOperator.FILTER_OPERATOR_LESS_THAN_OR_EQUAL:
+      case FilterOperator.FILTER_OPERATOR_LIKE:
         filterItem[mapping.valueField] = filter.value;
         break;
-      case FILTER_OPERATOR.IN: {
+      case FilterOperator.FILTER_OPERATOR_IN: {
         if (Array.isArray(filter.value)) {
           filterItem[mapping.valueField] = filter.value;
         } else {
@@ -78,7 +79,7 @@ export const convertFilterToBackend = (
         break;
       }
 
-      case FILTER_OPERATOR.NOT_IN: {
+      case FilterOperator.FILTER_OPERATOR_NOT_IN: {
         if (Array.isArray(filter.value)) {
           filterItem[mapping.valueField] = filter.value;
         } else {
@@ -129,7 +130,7 @@ export const getResultFromGrpc = async <T>(query: any): Promise<T> => {
 export const graphqlFormatError = (
   formattedError: GraphQLFormattedError,
 ): any => {
-  // console.error('GraphQL Error: ', formattedError);
+  console.error('graphqlFormatError: ', formattedError);
   const extensions = formattedError?.extensions;
 
   return {
@@ -138,6 +139,7 @@ export const graphqlFormatError = (
     extra: (extensions?.extra as any)?.errors ?? [],
     // preserve any nested grpc errors array so formatResponse can unpack it
     errors: extensions?.errors ?? undefined,
+    originalError: formattedError ?? undefined,
   } as any;
   // return (extensions?.extra as any)?.errors ?? [];
 };
@@ -150,6 +152,7 @@ export const graphqlFormatError = (
  */
 export const graphqlFormatResponse = (response: any): any => {
   try {
+    console.log('graphqlFormatResponse: ', JSON.stringify(response));
     if (
       !response ||
       !Array.isArray(response.errors) ||

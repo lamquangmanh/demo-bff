@@ -43,6 +43,14 @@ import { RoleUseCase } from '@/use-cases/role';
             join(protobufProtoDir, protoPath.replace(/^proto\//, '')),
           ),
           loader: {
+            // must set defaults to true to get default values for missing fields,
+            // otherwise grpc will return undefined for missing fields which can cause issues in our code
+            defaults: true,
+            // must set longs to String to avoid issues with long numbers in JavaScript, especially for IDs
+            longs: String,
+            // must set enums to String to get enum values as strings instead of numbers,
+            // which is more readable and easier to work with in JavaScript/TypeScript
+            enums: String,
             includeDirs: [protobufPackageRoot],
           },
         },

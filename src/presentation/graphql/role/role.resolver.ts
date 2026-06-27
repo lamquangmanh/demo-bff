@@ -53,12 +53,16 @@ export class RoleResolver extends BaseResolver {
   }
 
   @Query(() => GetRolesResponse, { name: 'roles' })
-  async getRoles(@Args() query: GetListArgs): Promise<GetRolesResponse> {
+  async getRoles(
+    @Args() query: GetListArgs,
+  ): Promise<GetRolesResponse | undefined> {
     return await this.useCase.getRoles(query);
   }
 
   @Query(() => RoleEntity, { name: 'role' })
-  async getRole(@Args() request: GetRoleInput): Promise<RoleEntity> {
+  async getRole(
+    @Args() request: GetRoleInput,
+  ): Promise<RoleEntity | undefined> {
     return await this.useCase.getRole(request);
   }
 

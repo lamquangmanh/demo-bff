@@ -18,6 +18,11 @@ export class ActionInput {
   @IsUUID()
   actionId?: string;
 
+  @Field(returnString, { nullable: true })
+  @IsOptional()
+  @IsUUID()
+  resourceId?: string;
+
   @Field(returnString, { nullable: false })
   @IsString()
   @IsNotEmpty()

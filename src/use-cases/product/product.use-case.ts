@@ -1,9 +1,10 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
   ProductService,
   GetProductRequest,
+  GetProductResponse,
   GetProductsResponse,
   CreateProductResponse,
   UpdateProductResponse,
@@ -26,6 +27,7 @@ import { ProductEntity } from '@/domain/entities';
 
 @Injectable()
 export class ProductUseCase implements OnModuleInit {
+  private readonly logger = new Logger(ProductUseCase.name);
   private productService!: ProductService;
 
   constructor(@Inject(USER_PACKAGE_NAME) private client: ClientGrpc) {}
@@ -55,6 +57,7 @@ export class ProductUseCase implements OnModuleInit {
         );
       return result?.data ?? [];
     } catch (error: any) {
+      this.logger.error(`Error in findByIds: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -63,10 +66,12 @@ export class ProductUseCase implements OnModuleInit {
     request: GetProductRequest,
   ): Promise<ProductEntity | undefined> {
     try {
-      return await getResultFromGrpc<ProductEntity>(
+      const result = await getResultFromGrpc<GetProductResponse>(
         this.productService.GetProduct(request),
       );
+      return result?.product;
     } catch (error: any) {
+      this.logger.error(`Error in getProduct: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -87,9 +92,9 @@ export class ProductUseCase implements OnModuleInit {
           sorts: request.sorts,
         }),
       );
-
       return result;
     } catch (error: any) {
+      this.logger.error(`Error in getProducts: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -113,6 +118,7 @@ export class ProductUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createProduct: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -136,6 +142,7 @@ export class ProductUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updateProduct: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -152,6 +159,7 @@ export class ProductUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deleteProduct: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }

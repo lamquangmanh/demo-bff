@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, Logger } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
 import {
@@ -24,6 +24,7 @@ import { ResourceEntity } from '@/domain/entities';
 
 @Injectable()
 export class ResourceUseCase implements OnModuleInit {
+  private readonly logger = new Logger(ResourceUseCase.name);
   private resourceService!: ResourceService;
 
   constructor(@Inject(USER_PACKAGE_NAME) private client: ClientGrpc) {}
@@ -33,25 +34,39 @@ export class ResourceUseCase implements OnModuleInit {
       this.client.getService<ResourceService>('ResourceService');
   }
 
-  async getResource(request: GetResourceRequest): Promise<ResourceEntity> {
-    return await getResultFromGrpc<ResourceEntity>(
-      this.resourceService.GetResource(request),
-    );
+  async getResource(
+    request: GetResourceRequest,
+  ): Promise<ResourceEntity | undefined> {
+    try {
+      return await getResultFromGrpc<ResourceEntity>(
+        this.resourceService.GetResource(request),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getResource: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
-  async getResources(request: GetListRequest): Promise<GetResourcesResponse> {
-    const filters: any = convertFilterToBackend(
-      request.filters,
-      FILTER_LIST_RESOURCE,
-    );
+  async getResources(
+    request: GetListRequest,
+  ): Promise<GetResourcesResponse | undefined> {
+    try {
+      const filters: any = convertFilterToBackend(
+        request.filters,
+        FILTER_LIST_RESOURCE,
+      );
 
-    return await getResultFromGrpc<GetResourcesResponse>(
-      this.resourceService.GetResources({
-        filters,
-        pagination: request.pagination,
-        sorts: request.sorts,
-      }),
-    );
+      return await getResultFromGrpc<GetResourcesResponse>(
+        this.resourceService.GetResources({
+          filters,
+          pagination: request.pagination,
+          sorts: request.sorts,
+        }),
+      );
+    } catch (error: any) {
+      this.logger.error(`Error in getResources: ${error.message}`, error);
+      throwErrorFromGrpc(error);
+    }
   }
 
   async createResource(
@@ -66,6 +81,7 @@ export class ResourceUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in createResource: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -82,6 +98,7 @@ export class ResourceUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in updateResource: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
@@ -98,6 +115,7 @@ export class ResourceUseCase implements OnModuleInit {
         }),
       );
     } catch (error: any) {
+      this.logger.error(`Error in deleteResource: ${error.message}`, error);
       throwErrorFromGrpc(error);
     }
   }
